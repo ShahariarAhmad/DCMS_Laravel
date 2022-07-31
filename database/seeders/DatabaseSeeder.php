@@ -61,9 +61,9 @@ class DatabaseSeeder extends Seeder
             DB::table('users')->insert([
                 [
                     'id' => 1,
-                    'f_name' => 'শাহারিয়ার',
-                    'l_name' => 'আহমেদ',
-                    'email' => 'ridoy@gmail.com',
+                    'f_name' => 'Super',
+                    'l_name' => 'Admin',
+                    'email' => 'admin@nomail.com',
                     'password' => Hash::make(12341234),
                     'cell_number' => '0174589759',
                     'sex' => 'পুরুষ',
