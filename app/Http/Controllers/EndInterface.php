@@ -474,8 +474,7 @@ class EndInterface extends Controller
     public function payment_history()
     {
 
-
-
+        return 'This page has a bug that I recently found. I will fix it when I can manage enough time. I believe the bug is related to dummy data Or SQL Query.';
         if (Gate::allows('isPatient')) {
             $payment_appointments = DB::table('users')
                 ->join('transactions', 'transactions.id', 'users.id')
