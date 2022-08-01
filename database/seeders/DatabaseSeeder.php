@@ -195,7 +195,7 @@ class DatabaseSeeder extends Seeder
                     'f_name' => 'জান্নাতুল',
                     'l_name' => 'নাইম',
                     'email' => 'jannatul@gmail.com',
-                    'password' => '12de34',
+                    'password' => Hash::make(12341234),
                     'cell_number' => '0174559',
                     'sex' => 'নারী',
                     // 'age' => '১৬',

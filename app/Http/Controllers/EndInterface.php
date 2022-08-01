@@ -484,7 +484,7 @@ class EndInterface extends Controller
                 ->join('users as u', 'u.id', 'handlers.user_id')
                 ->where('users.id', '==', Auth::id())
                 ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
-
+                return $payment_appointments;
 
             $payment_diet_records = DB::table('users')
 
@@ -492,9 +492,10 @@ class EndInterface extends Controller
                 ->join('transactions', 'transactions.id', 'diet_records.transaction_id')
                 ->join('handlers', 'handlers.id', 'transactions.handler_id')
                 ->join('users as u', 'u.id', 'handlers.user_id')
+                ->where('users.id', '==', Auth::id())
                 ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
 
-
+return $payment_diet_records;
 
             $history = array_merge($payment_appointments, $payment_diet_records);
 

@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="card p-4">
                     <div class="card-header  bg-dark mb-2">
-                        <h3 class="card-title">Pre Made Diet Records
+                        <h3 class="card-title">Payment History
                         </h3>
                     </div>
                     <!-- /.card-header -->

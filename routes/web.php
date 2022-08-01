@@ -70,20 +70,26 @@ Route::get('/setup', function(){
 })->name('index');
 
 
+Route::get('/test',function(){
+	return auth()->check();
+});
+
 Route::get('/dashhub', function () {
 
-	if (auth()->user()->id === 1) {
+	if (auth()->user()->role_id == 1) {
 		return redirect()->route('Dashboard');
-	} elseif (auth()->user()->id === 2) {
-		return redirect()->route('Dashboard_moderator_dashboard');
-	} elseif (auth()->user()->id === 3) {
-		return redirect()->route('Dashboard_patitient_dashboard');
-	} elseif (auth()->user()->id === 4) {
-		return redirect()->route('Dashboard_writer_dashboard');
+	} 
+	
+	if (auth()->user()->role_id == 2) {
+		return redirect(route('Dashboard_moderator_dashboard'));
+	} 
+	if (auth()->user()->role_id == 3) {
+		return redirect(route('Dashboard_patitient_dashboard'));
+	} 
+	if (auth()->user()->role_id == 4) {
+		return redirect(route('Dashboard_writer_dashboard'));
 	}
 
-
-	return redirect()->route('Dashboard_patitient_dashboard');
 });
 
 
@@ -123,8 +129,15 @@ Route::middleware(['auth'])->group(function () {
 		->name('Dashboard_all_records_search');
 	Route::get('/dashboard/diet_records/search', [searchController::class, 'all_diet_records_search'])
 		->name('Dashboard_all_diet_records_search');
+
+
+
+
 	Route::get('/dashboard', [EndInterface::class, 'admin_dashboard'])
 		->name('Dashboard');
+
+
+
 	Route::get('/dashboard/quickform', [EndInterface::class, 'quickform'])
 		->name('Dashboard_quickform');
 	Route::get('/dashboard/create_chart', [EndInterface::class, 'quickformWithRequest'])
@@ -135,8 +148,14 @@ Route::middleware(['auth'])->group(function () {
 		->name('Dashboard_accounts');
 	Route::get('/dashboard/admin_dashboard', [EndInterface::class, 'admin_dashboard'])
 		->name('Dashboard_admin_dashboard');
-	Route::get('/dashboard/appointment', [EndInterface::class, 'appointment'])
+
+
+
+	Route::get('/dashboard/create_appointment', [EndInterface::class, 'appointment'])
 		->name('Dashboard_appointment');
+
+
+
 	Route::get('/dashboard/chamber_details', [EndInterface::class, 'chamber_details'])
 		->name('Dashboard_chamber_details');
 	Route::get('/dashboard/contact', [EndInterface::class, 'contact'])
@@ -164,8 +183,18 @@ Route::middleware(['auth'])->group(function () {
 		->name('Dashboard_payments');
 	Route::get('/dashboard/payment_history', [EndInterface::class, 'payment_history'])
 		->name('Dashboard_payment_history');
-	Route::get('/dashboard/create_serials', [EndInterface::class, 'appointments_serials'])
+
+
+
+
+
+
+
+	Route::get('/dashboard/appointment', [EndInterface::class, 'appointments_serials'])
 		->name('Dashboard_appointments_serials');
+
+
+
 	Route::get('/dashboard/social_links', [EndInterface::class, 'social_links'])
 		->name('Dashboard_social_links');
 	Route::get('/dashboard/writer_dashboard', [EndInterface::class, 'writer_dashboard'])

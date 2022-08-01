@@ -70,18 +70,39 @@
                     </li>
 
                 </ul>
+                @if (!auth()->check())
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary m-2 btn-sm"
+                        id="login_switch">Login</a>
 
-                <a href="{{ route('login') }}" class="btn btn-outline-primary m-2 btn-sm" id="login_switch">Login</a>
-                <a href="{{ route('register') }}" class="btn btn-outline-success m-2 btn-sm"
-                    id="register_switch">Register</a>
 
+                    <a href="{{ route('register') }}" class="btn btn-outline-success m-2 btn-sm"
+                        id="register_switch">Register</a>
+                @endif
+
+                @if (auth()->check() && auth()->user()->role_id == 1)
+                    <a href="{{ route('Dashboard') }}" class="btn btn-outline-primary m-2 btn-sm"
+                        >Dashboard</a>
+                @endif
+                @if (auth()->check() && auth()->user()->role_id == 2)
+                    <a href="{{ route('Dashboard_moderator_dashboard') }}" class="btn btn-outline-primary m-2 btn-sm"
+                        id="login_switch">Dashboard</a>
+                @endif
+                @if (auth()->check() && auth()->user()->role_id == 3)
+                    <a href="{{ route('Dashboard_patitient_dashboard') }}" class="btn btn-outline-primary m-2 btn-sm"
+                        >Dashboard</a>
+                @endif
+                @if (auth()->check() && auth()->user()->role_id == 4)
+                    <a href="{{ route('Dashboard_writer_dashboard') }}" class="btn btn-outline-primary m-2 btn-sm"
+        >Dashboard</a>
+                @endif
 
             </div>
         </div>
     </nav>
     <div id="login" class="d-none">
         <div class="container col-xl-10 col-xxl-8 px-4 py-5">
-            <button class="btn btn-light  float-end" id="cancel"><i class="fa-solid fa-xmark" width="20px"></i></button>
+            <button class="btn btn-light  float-end" id="cancel"><i class="fa-solid fa-xmark"
+                    width="20px"></i></button>
 
             <div class="row align-items-center g-lg-5 py-5 shadow-lg mt-5 ">
 
@@ -118,7 +139,8 @@
                         </fieldset>
                     </form>
 
-                    <form action="" method="post" class="p-4 p-md-5 border rounded-3 bg-light" id="forgot_form">
+                    <form action="" method="post" class="p-4 p-md-5 border rounded-3 bg-light"
+                        id="forgot_form">
                         @csrf
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="floatingInput" name="email">
@@ -149,7 +171,8 @@
                 </div>
                 <div class="col-md-10 mx-auto col-lg-5">
 
-                    <form class="p-4 p-md-5 border rounded-3 bg-light" method="POST" action="{{ route('register') }}">
+                    <form class="p-4 p-md-5 border rounded-3 bg-light" method="POST"
+                        action="{{ route('register') }}">
                         @csrf
                         <div class="form-floating mb-3">
                             <input type="text" name="name" class="form-control" id="floatingInput">
@@ -237,7 +260,8 @@
                             @foreach ($chamber as $item)
                                 <span class="col-sm-12 col-md-4 p-2">
                                     <div class="card p-0 shadow">
-                                        <img src="{{ asset('/assets/frontend/images/chambers/'.$item->img_url) }}" class="card-img-top" alt="...">
+                                        <img src="{{ asset('/assets/frontend/images/chambers/' . $item->img_url) }}"
+                                            class="card-img-top" alt="...">
                                         <div class="card-body">
                                             <h5 class="card-title"> <strong>{{ $item->name }}</strong> </h5>
                                         </div>
@@ -390,9 +414,8 @@
                                             <div class="px-4 pt-0 pb-4 cover bg-primary">
 
                                                 <div class="media align-items-end profile-head">
-                                                    <div class="profile mr-3"><img
-                                                            src="{{ $about[0]->profile_img }}" width="200"
-                                                            class="rounded my-4 img-thumbnail"></div>
+                                                    <div class="profile mr-3"><img src="{{ $about[0]->profile_img }}"
+                                                            width="200" class="rounded my-4 img-thumbnail"></div>
                                                     <div class="media-body mb-5 text-white">
                                                         <h4 class="mt-0 mb-0">{{ $about[0]->name }}</h4>
                                                         <p class="small mb-4"><i
@@ -469,19 +492,21 @@
                                                 </h5>
                                                 <div class="card-body bg-transparent">
                                                     <ul class="list-group list-group-flush bg-transparent">
-                                                        <li class="list-group-item border-0 bg-transparent text-white">{{ $item->house_no }} ,
+                                                        <li class="list-group-item border-0 bg-transparent text-white">
+                                                            {{ $item->house_no }} ,
                                                             {{ $item->road_number }}, {{ $item->area }} ,
                                                             {{ $item->district }}
                                                             ।
                                                         </li>
-                                                        <li class="list-group-item border-0 bg-transparent text-white">{{ $item->day }},
+                                                        <li class="list-group-item border-0 bg-transparent text-white">
+                                                            {{ $item->day }},
                                                             {{ $item->time }}
                                                             । </li>
-    
+
                                                     </ul>
-    
+
                                                 </div>
-                                            
+
                                             </div>
                                         </span>
                                     @endforeach
