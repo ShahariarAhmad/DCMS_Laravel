@@ -1,7 +1,7 @@
 # Dietitian Content Management System (DCMS)
 
 
-
+# Currently rearrainging routes, So, few routes might break. Preparing it for developing API and turning it into a SPA with Vue Js.  (6/8/2020)
 
 
 
