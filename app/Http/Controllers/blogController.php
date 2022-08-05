@@ -100,12 +100,12 @@ class blogController extends Controller
        
     }
 
-    function deleteBlogPost($delete)
+    function deleteBlogPost($id)
     {
         if (Gate::any(['isAdmin', 'isWriter'])) {
 
             if (Auth::user()->role_id === 1) {
-                $post = Blog::find($delete);
+                $post = Blog::find($id);
                 File::delete($post->img_url);
                 $post->delete();
                 return back()->with('status','Article deleted...');
