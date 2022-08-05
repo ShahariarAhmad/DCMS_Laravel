@@ -54,7 +54,7 @@
                                             <td>
                                                 <button type="submit" class="btn btn-warning">Send</button>
                                                 <a class=" btn  bg-warning"
-                                                    href="/dashboard/pre_made_diet_charts/premade/{{ $x->id }}">
+                                                    href="{{route('preview_diet',$x->id)}}">
                                                     preview
                                                 </a>
                                             </td>

@@ -29,7 +29,7 @@
                             <p class="card-text">
                                 {{Str::limit($x['article'],100)}}
                             </p>
-                            <a class="btn btn-dark float-right" href="/dashboard/blog/edit={{$x['id']}}">
+                            <a class="btn btn-dark float-right" href="{{route('Dashboard_editBlogPost',$x['id'])}}">
                                 Edit
                             </a>
                         </div>
@@ -73,7 +73,7 @@
                             <p class="card-text">
                                 {{Str::limit($x['article'],100)}}
                             </p>
-                            <a class="btn btn-dark float-right" href="/dashboard/blog/edit={{$x['id']}}">
+                            <a class="btn btn-dark float-right" href="{{route('Dashboard_editBlogPost',$x['id'])}}">
                                 Edit
                             </a>
                         </div>
@@ -114,7 +114,7 @@
                             <p class="card-text">
                                 {{Str::limit($x['article'],100)}}
                             </p>
-                            <a class="btn btn-dark float-right" href="/dashboard/blog/edit={{$x['id']}}">
+                            <a class="btn btn-dark float-right" href="{{route('Dashboard_editBlogPost',$x['id'])}}">
                                 Edit
                             </a>
                         </div>

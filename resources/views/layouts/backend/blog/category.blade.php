@@ -33,7 +33,7 @@
                                 @foreach ($categories as $x)
                                     <button type="button" class="btn btn-grey m-1 text-info">
                                         {{ $x['category'] }}
-                                        <a href="/dashboard/categories/{{ $x['id'] }}" class="text-danger"> &nbsp;
+                                        <a href=" {{route('Dashboard_categoryDelete',$x['id'])}}" class="text-danger"> &nbsp;
                                             x</a>
                                     </button>
                                 @endforeach

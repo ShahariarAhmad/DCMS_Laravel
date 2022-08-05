@@ -81,7 +81,7 @@
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-dark"
-                                                        href="/dashboard/pre_made_diet_records/{{ $x->id }}/detach">
+                                                        href="{{route('Dashboard_pre_detach',$x->id)}}">
                                                         Detach Diet
                                                     </a>
                                                 </td>

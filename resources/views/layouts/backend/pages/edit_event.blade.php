@@ -87,8 +87,8 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <a type="button" class="btn btn-light float-right text-danger p-1 m-0" href="/dashboard/event/delete={{ $event->id }}"> Delete</a>
-                                <a type="button" class="btn btn-light float-right text-info p-1 m-0" href="/dashboard/event/edit={{ $event->id }}"> Edit </a>
+                                <a type="button" class="btn btn-light float-right text-danger p-1 m-0" href="{{route('Dashboard_deleteEvent',$event->id)}}"> Delete</a>
+                                <a type="button" class="btn btn-light float-right text-info p-1 m-0" href="{{route('Dashboard_editEvent',$event->id)}}"> Edit </a>
                             </div>
                         </div>
                         @endforeach

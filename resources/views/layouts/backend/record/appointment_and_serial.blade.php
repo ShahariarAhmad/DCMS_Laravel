@@ -89,12 +89,12 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="/dashboard/create_serials/tid={{ $p['trix_id'] }}/action=approve">
+                                                            <a class="dropdown-item" href="{{route('approve',$p['trix_id'])}}">
                                                                 Approve
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="/dashboard/create_serials/tid={{ $p['trix_id'] }}/action=notFound">
+                                                            <a class="dropdown-item" href="{{route('notFound',$p['trix_id'])}}">
                                                                 Not Found
                                                             </a>
                                                         </li>
@@ -102,12 +102,12 @@
                                                             <hr class="dropdown-divider" />
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="/dashboard/create_serials/tid={{ $p['transaction_id'] }}/action=present">
+                                                            <a class="dropdown-item" href="{{route('present',$p['transaction_id'])}}">
                                                                 Patient Was Present
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="/dashboard/create_serials/tid={{ $p['transaction_id'] }}/action=absent">
+                                                            <a class="dropdown-item" href="{{route('absent',$p['transaction_id'])}}">
                                                                 Patient Was Absent
                                                             </a>
                                                         </li>

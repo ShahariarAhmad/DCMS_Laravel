@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <a href="/dashboard/diet_requests/create_chart?id={{ $x->uid }}&trix={{ $x->pid }}"
+                                        <a href="{{route('Dashboard_create_chart',[$x->uid,$x->pid])}}"
                                             class="btn btn-primary">Create diet</a>
                                     </div>
                                     <!-- /.card-body -->
@@ -80,11 +80,11 @@
                                     </div>
                                     <div class="card-footer">
                                         <a class="card-link btn btn-success "
-                                            href="/dashboard/diet_requests/payment_confirmed?id={{ $x->pid }}">
+                                            href="{{route('Dashboard_payment_confirmed',$x->pid)}}">
                                             Recieved
                                         </a>
                                         <a class="card-link btn btn-danger"
-                                            href="/dashboard/diet_requests/trix_notFound?id={{ $x->pid }}">
+                                            href=" {{route('Dashboard_trix_notFound',$x->pid)}}">
                                             Not Found
                                         </a>
                                     </div>

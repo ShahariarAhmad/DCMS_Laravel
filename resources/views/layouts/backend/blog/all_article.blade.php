@@ -18,7 +18,7 @@
                         @foreach ($blog as $article)
                             <div class="card-body">
                                 <a type="button" class="btn btn-light float-right text-danger"
-                                    href="/dashboard/blog/delete={{ $article->id }}"> Delete</a>
+                                    href=" {{route('Dashboard_deleteBlogPost',$article->id)}}"> Delete</a>
                                 <!-- @if (Auth::user()->role_id == 1)
     @if ($article->feautured == 'y')
     <a type="button" class="btn btn-light float-right text-dark"
@@ -30,7 +30,7 @@
     @endif -->
 
                                 <a type="button" class="btn btn-light float-right text-info"
-                                    href="/dashboard/blog/edit={{ $article->id }}"> Edit</a>
+                                    href="{{route('Dashboard_editBlogPost',$article->id)}}"> Edit</a>
                                 <br>
                                 <p class="card-title"> <b> {{ $article->title }} </b></p>
                                 <p class="card-text">{{ Str::limit(strip_tags($article->article), 250) }}</p>

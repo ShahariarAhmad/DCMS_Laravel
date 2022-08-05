@@ -32,7 +32,7 @@
                                                 <td>{{ $list->name }}</td>
                                                 <td>
                                                     <a class="btn btn-outline-secondary"
-                                                        href="/dashboard/edit_diet/{{ $list->id }}"> Edit
+                                                        href="{{route('Dashboard_diet_drafts',$list->id)}}"> Edit
                                                     </a>
                                                 </td>
                                             </tr>

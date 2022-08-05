@@ -58,7 +58,7 @@
                                                 <td class="text-dark py-0">
                                                     <span class="row px-1">
                                                         @if ($a->role_id !== 1)
-                                                            <a href="/dashboard/accounts/delete={{ $a->uid }}"
+                                                            <a href="{{route('Dashboard_deleteAccount',$a->uid)}}"
                                                                 class="py-2 px-3 btn-danger ml-auto">Delete</a>
                                                         @else
                                                             <a class="py-2 px-3 btn-dark ml-auto">Delete</a>
@@ -80,7 +80,7 @@
                                                 <td class="text-dark py-0">
                                                     <span class="row px-1">
                                                         @if ($a->role_id !== 1)
-                                                            <a href="/dashboard/accounts/delete={{ $a->uid }}"
+                                                            <a href="{{route('Dashboard_deleteAccount',$a->uid)}}"
                                                                 class="py-2 px-3 btn-danger ml-auto">Delete</a>
                                                         @else
                                                             <a class="py-2 px-3 btn-dark ml-auto">Delete</a>

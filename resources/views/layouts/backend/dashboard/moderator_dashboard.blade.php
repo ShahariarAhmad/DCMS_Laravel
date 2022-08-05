@@ -65,62 +65,7 @@
                     </div>
                 </div>
             </div>
-{{-- 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary collapsed-card">
-                        <div class="card-header bg-success">
-                            <h3 class="card-title">feedback</h3>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                        class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-
-
-                        <div class="card-body m-0 p-0">
-                            <div class="card">
-                                @foreach ($inbox as $l)
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="feedback-info col-6" style="border-bottom: 2px solid black;">
-                                                <h3>User-info</h3>
-                                                <p class="mb-0">
-                                                    name: {{ $l->name }}
-                                                </p>
-                                                <p class="mb-0">
-                                                    Age: {{ $l->age }}
-                                                </p>
-                                                <p class="mb-0">
-                                                    Occupation: {{ $l->occupation }}
-                                                </p>
-                                                <p class="mb-0">
-                                                    Gender: {{ $l->gender }}
-                                                </p>
-                                                <br>
-                                                <a type="submit" class="btn btn-primary">delete</a>
-                                            </div>
-                                            <div class="feedback-message col-6">
-                                                <h3>Message:</h3>
-                                                <p>{{ $l->message }}</p>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- /.card-body -->
-                </div>
-            </div> --}}
         </div>
 
 

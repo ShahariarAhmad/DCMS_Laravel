@@ -129,13 +129,13 @@ class dietController extends Controller
 
 
 
-    function create_chart(Request $request)
+    function create_chart(Request $request ,$id,$trix)
     {
 
         if (Gate::allows('isAdmin')) {
 
-            $id = $request->query('id');
-            $trix = $request->query('trix');
+            $id = $id;
+            $trix = $trix;
             $u = Transaction::find($trix);
             $user_id = $u->user_id;
 
@@ -149,11 +149,11 @@ class dietController extends Controller
         }
     }
 
-    function payment_confirmed(Request $request)
+    function payment_confirmed($tid)
     {
 // dd();
         if (Gate::allows('isAdmin')) {
-            $tid = $request->query('id');
+      
             $data = Transaction::find($tid);
             $data->payment_status = 'approved';
             $data->save();
@@ -164,11 +164,11 @@ class dietController extends Controller
     }
 
 
-    function trix_notFound(Request $request)
+    function trix_notFound($tid)
     {
 
         if (Gate::allows('isAdmin')) {
-            echo $tid = $request->query('id');
+          
             $data = Transaction::find($tid);
             $data->payment_status = 'approved';
             $data->save();

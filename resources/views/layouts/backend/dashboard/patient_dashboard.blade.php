@@ -2,16 +2,8 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
-
-
-
-
             <div class="row">
-
                 <section class="col-lg-7 connectedSortable ui-sortable">
-
-
-
 
                     <div class="card direct-chat direct-chat-primary">
                         <div class="card-header ui-sortable-handle" style="cursor: move;">
@@ -20,7 +12,7 @@
 
                         <div class="card-body">
                             <div class="card">
-                             
+
 
                                 <div class="card-body">
                                     <table class="table table-bordered">

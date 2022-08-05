@@ -81,7 +81,7 @@
                     <img src="{{ asset('assets/frontend/images/gallery/' . $g->image_url) }}"
                         style="height: 100%;
                     width: 100%;">
-                    <a href="/dashboard/gallery/{{ $g->id }}/delete" class="btn btn-block btn-danger">delete</a>
+                    <a href="{{route('Dashboard_galleryDelete',$g->id)}}" class="btn btn-block btn-danger">delete</a>
                 </div>
             </div>
         @endforeach

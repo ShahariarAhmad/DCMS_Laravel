@@ -53,15 +53,7 @@
                                                     class="form-control">{{ $note }} </textarea>
                                             </td>
                                         </tr>
-                                        {{-- <tr>
-                                            <td>Diet Chart Name: </td>
-                                            <td><input type="text" name="name" class="form-control"
-                                                    placeholder="Eg. Keto Diet, SR.102"></td>
-                                            <td>Diet Type: </td>
-                                            <td><input type="text" name="type" class="form-control"
-                                                    placeholder="Eg. Keto, Fasting"></td>
-
-                                        </tr> --}}
+                              
                                         <tr>
                                             <td colspan="2">
                                                 <input type="submit" class="col-12" value="sendDiet" name="submit">

@@ -34,7 +34,7 @@
                         @foreach ($tags as $x)
                             <button type="button" class="btn btn-grey m-1 text-info">
                                 {{ $x['tag'] }}
-                                <a href="/dashboard/tags/{{ $x['id'] }}" class="text-danger"> &nbsp; x</a>
+                                <a href="{{route('Dashboard_tagDelete',$x['id'])}}" class="text-danger"> &nbsp; x</a>
                             </button>
                         @endforeach
                     </div>
