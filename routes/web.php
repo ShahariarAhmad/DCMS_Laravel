@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FrontInterface;
 use App\Http\Controllers\EndInterface;
 use App\Http\Controllers\appointmentController;
 use App\Http\Controllers\dietController;
@@ -10,8 +9,7 @@ use App\Http\Controllers\FrontSpaController;
 use App\Http\Controllers\pageController;
 use App\Http\Controllers\searchController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Support\Facades\DB;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -55,35 +53,10 @@ Route::get('/appointment/store', [appointmentController::class, 'store'])
 
 Auth::routes();
 
-
-
-// Route::prefix('admin')->group(function () {
-//     Route::get('/users', function () {
-
-//     });
-// });
-
-
-
-
 Route::middleware(['auth'])->group(function () {
 
-
-
-
 	Route::prefix('dashboard')->group(function () {
-		Route::post('/request_diet/sent/', [dietController::class, 'request_diet_form'])
-			->name('Dashboard_request_diet_form');
-		Route::get("/dashboard/diet_requests/{id}/{trix}/create", [dietController::class, 'create_chart'])
-			->name('Dashboard_create_chart');
-		Route::get('/diet_requests/{id}/confirmed', [dietController::class, 'payment_confirmed'])
-			->name('Dashboard_payment_confirmed');
-		Route::get('/diet_requests/{id}/notFound', [dietController::class, 'trix_notFound'])
-			->name('Dashboard_trix_notFound');
-		Route::post('/create_chart/upload', [dietController::class, 'create_chart_post'])
-			->name('Dashboard_create_chart_post');
-		Route::post('/pre_made_diet_charts/send', [dietController::class, 'sendPremade'])
-			->name('Dashboard_sendPremade');
+
 		Route::prefix('serials')->group(function () {
 			Route::get('{trix_id}/withdrawn', [EndInterface::class, 'accountReject'])->name('withdrawn');
 			Route::get('{trix_id}/approve', [EndInterface::class, 'accountApprove'])->name('approve');
@@ -91,12 +64,6 @@ Route::middleware(['auth'])->group(function () {
 			Route::get('{transaction_id}/present', [EndInterface::class, 'accountPresent'])->name('present');
 			Route::get('{transaction_id}/absent', [EndInterface::class, 'accountAbsent'])->name('absent');
 		});
-
-
-
-
-
-
 
 		Route::prefix('gallery')->group(function () {
 
@@ -131,63 +98,84 @@ Route::middleware(['auth'])->group(function () {
 		Route::prefix('events')->group(function () {
 			Route::get('/', [pageController::class, 'event'])
 				->name('Dashboard_event');
-			Route::post('/event/create', [pageController::class, 'createEvent'])
+			Route::post('create', [pageController::class, 'createEvent'])
 				->name('Dashboard_createEvent');
-			Route::get('/event/{id}/edit', [pageController::class, 'editEvent'])
+			Route::get('{id}/edit', [pageController::class, 'editEvent'])
 				->name('Dashboard_editEvent');
-			Route::post('/event/update', [pageController::class, 'updateEvent'])
+			Route::post('update', [pageController::class, 'updateEvent'])
 				->name('Dashboard_updateEvent');
-			Route::get('/event/{id}/delete', [pageController::class, 'deleteEvent'])
+			Route::get('{id}/delete', [pageController::class, 'deleteEvent'])
 				->name('Dashboard_deleteEvent');
 		});
 
-
+		// Diet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
 		Route::prefix('diet')->group(function () {
-			Route::get('/quickform', [EndInterface::class, 'quickform'])
-			->name('Dashboard_quickform');
-		Route::get('/create_chart', [EndInterface::class, 'quickformWithRequest'])
-			->name('Dashboard_quickformWithRequest');
+			Route::post('/request_diet/sent/', [dietController::class, 'request_diet_form'])
+				->name('Dashboard_request_diet_form');
+			Route::get("/dashboard/diet_requests/{id}/{trix}/create", [dietController::class, 'create_chart'])
+				->name('Dashboard_create_chart');
+			Route::get('/diet_requests/{id}/confirmed', [dietController::class, 'payment_confirmed'])
+				->name('Dashboard_payment_confirmed');
+			Route::get('/diet_requests/{id}/notFound', [dietController::class, 'trix_notFound'])
+				->name('Dashboard_trix_notFound');
+			Route::post('/create_chart/upload', [dietController::class, 'create_chart_post'])
+				->name('Dashboard_create_chart_post');
+			Route::post('/pre_made_diet_charts/send', [dietController::class, 'sendPremade'])
+				->name('Dashboard_sendPremade');
+			Route::get('/quickform', [dietController::class, 'quickform'])
+				->name('Dashboard_quickform');
+			Route::get('/create_chart', [dietController::class, 'quickformWithRequest'])
+				->name('Dashboard_quickformWithRequest');
 			Route::get('premade/{id}', [dietController::class, 'preview_diet']);
 			Route::post('update', [dietController::class, 'updateDiet'])
 				->name('Dashboard_updateDiet');
-			Route::get('/diet_records/search', [searchController::class, 'all_diet_records_search'])
+			Route::get('/diet_records/search', [dietController::class, 'all_diet_records_search'])
 				->name('Dashboard_all_diet_records_search');
 
 			Route::get('{id}/edit', [dietController::class, 'editDiet'])
 				->name('Dashboard_diet_drafts');
-			Route::get('all_payment_and_transaction_records', [EndInterface::class, 'all_payment_and_transaction_records'])
+			Route::get('all_payment_and_transaction_records', [dietController::class, 'all_payment_and_transaction_records'])
 				->name('Dashboard_all_payment_and_transaction_records');
-			Route::get('diet_requests', [EndInterface::class, 'diet_requests'])
+			Route::get('diet_requests', [dietController::class, 'diet_requests'])
 				->name('Dashboard_diet_requests');
-			Route::get('drafts', [EndInterface::class, 'diet_drafts'])
+			Route::get('drafts', [dietController::class, 'diet_drafts'])
 				->name('Dashboard_diet_drafts');
-			Route::get('pre_made_charts', [EndInterface::class, 'pre_made_diet_charts'])
+			Route::get('pre_made_charts', [dietController::class, 'pre_made_diet_charts'])
 				->name('Dashboard_pre_made_diet_charts');
-			Route::get('records', [EndInterface::class, 'diet_records'])
+			Route::get('records', [dietController::class, 'diet_records'])
 				->name('Dashboard_diet_records');
-			Route::get('pre_made/records', [EndInterface::class, 'pre_made_diet_records'])
+			Route::get('pre_made/records', [dietController::class, 'pre_made_diet_records'])
 				->name('Dashboard_pre_made_diet_records');
-			Route::get('pre_made_diet_records/search', [searchController::class, 'pre_made_diet_records_search'])
+			Route::get('pre_made_diet_records/search', [dietController::class, 'pre_made_diet_records_search'])
 				->name('Dashboard_pre_made_diet_records_search');
-			Route::get('pre_made_diet_records/{id}/detach', [EndInterface::class, 'pre_detach'])
+			Route::get('pre_made_diet_records/{id}/detach', [dietController::class, 'pre_detach'])
 				->name('Dashboard_pre_detach');
 
-			Route::get('create', [EndInterface::class, 'create_diet'])
+			Route::get('create', [dietController::class, 'create_diet'])
 				->name('Dashboard_create_diet');
-			Route::get('current', [EndInterface::class, 'view_chart'])
+			Route::get('current', [dietController::class, 'view_chart'])
 				->name('Dashboard_view_chart');
-			Route::get('request_diet', [EndInterface::class, 'request_diet'])
+			Route::get('request_diet', [dietController::class, 'request_diet'])
 				->name('Dashboard_request_diet');
 
 			Route::get('{id}/detach', [dietController::class, 'detachDiet'])
 				->name('Dashboard_detachDiet');
 		});
 
+
+
+
+		// Blog Controller ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+
+
 		Route::prefix('article')->group(function () {
 			Route::get('all_blogs', [blogController::class, 'allBlogPost'])
 				->name('Dashboard_allBlogPost');
-				Route::get('/write', [EndInterface::class, 'write_a_blog'])
-			->name('Dashboard_write_a_blog');
+			Route::get('write', [blogController::class, 'write_a_blog'])
+				->name('Dashboard_write_a_blog');
 			Route::post('write', [blogController::class, 'uploadBlogPost'])
 				->name('Dashboard_uploadBlogPost');
 			Route::delete('{id}/delete', [blogController::class, 'deleteBlogPost'])
@@ -205,17 +193,17 @@ Route::middleware(['auth'])->group(function () {
 				->name('Dashboard_editBlogPost');
 			Route::delete('{id}/delete', [blogController::class, 'deleteInboxMsg'])
 				->name('deleteInboxMsg');
-			Route::get('/tags', [blogController::class, 'tags'])
+			Route::get('tags', [blogController::class, 'tags'])
 				->name('Dashboard_tags');
-			Route::post('/tags/insert', [blogController::class, 'tagRequest'])
+			Route::post('tags/insert', [blogController::class, 'tagRequest'])
 				->name('Dashboard_tagsRequest');
-			Route::get('/tags/{id}', [blogController::class, 'tagDelete'])
+			Route::get('tags/{id}', [blogController::class, 'tagDelete'])
 				->name('Dashboard_tagDelete');
-			Route::get('/categories', [blogController::class, 'categories'])
+			Route::get('categories', [blogController::class, 'categories'])
 				->name('Dashboard_categories');
-			Route::post('/categories/insert', [blogController::class, 'categoryRequest'])
+			Route::post('categories/insert', [blogController::class, 'categoryRequest'])
 				->name('Dashboard_categoriesRequest');
-			Route::get('/categories/{id}', [blogController::class, 'categoryDelete'])
+			Route::get('categories/{id}', [blogController::class, 'categoryDelete'])
 				->name('Dashboard_categoryDelete');
 
 			// 	Route::get('tag={id}/posts', [FrontInterface::class, 'tagRelatedPosts'])
@@ -227,13 +215,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 		Route::prefix('dashboard')->group(function () {
-			// Route::get('/', [EndInterface::class, 'admin_dashboard'])
-			// ->name('Dashboard');
+			Route::get('admin', [EndInterface::class, 'admin_dashboard'])
+				->name('Dashboard');
 
 			Route::get('/writer', [EndInterface::class, 'writer_dashboard'])
-			->name('Dashboard_writer_dashboard');
-			Route::get('admin', [EndInterface::class, 'admin_dashboard'])
-				->name('Dashboard_admin_dashboard');
+				->name('Dashboard_writer_dashboard');
+
 
 			Route::get('moderator', [EndInterface::class, 'moderator_dashboard'])
 				->name('Dashboard_moderator_dashboard');
@@ -255,7 +242,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-	
+
 		Route::get('/about', [EndInterface::class, 'about'])
 			->name('Dashboard_about');
 		Route::get('/accounts', [EndInterface::class, 'accounts'])
@@ -282,19 +269,19 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-		Route::get('/patitient_profile', [EndInterface::class, 'patitient_profile'])->name('Dashboard_patitient_profile');
-		Route::get('/payments', [EndInterface::class, 'payment'])
+		Route::get('patitient_profile', [EndInterface::class, 'patitient_profile'])->name('Dashboard_patitient_profile');
+		Route::get('payments', [EndInterface::class, 'payment'])
 			->name('Dashboard_payments');
-		Route::get('/payment_history', [EndInterface::class, 'payment_history'])
+		Route::get('payment_history', [EndInterface::class, 'payment_history'])
 			->name('Dashboard_payment_history');
-		Route::get('/appointment', [EndInterface::class, 'appointments_serials'])
+		Route::get('appointment', [EndInterface::class, 'appointments_serials'])
 			->name('Dashboard_appointments_serials');
 
-		
 
 
 
-		Route::get('/create_serials', [EndInterface::class, 'createSerials'])
+
+		Route::get('create_serials', [EndInterface::class, 'createSerials'])
 			->name('Dashboard_createSerials');
 
 		Route::delete('accounts/delete={id}', [EndInterface::class, 'deleteAccount'])
@@ -308,7 +295,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-		Route::get('/accounts/search', [searchController::class, 'user_records_search'])
+		Route::get('accounts/search', [searchController::class, 'user_records_search'])
 			->name('Dashboard_user_records_search');
 		Route::post('/history', [EndInterface::class, 'submit_mcq'])
 			->name('Dashboard_submit_mcq');

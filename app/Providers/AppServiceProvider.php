@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\interfaces\DietInterface;
 use App\Models\Chamber;
 use App\Models\Social_media;
 use Illuminate\Pagination\Paginator;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Blog;
 use App\Models\User;
+use App\Repositories\DietRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind( DietInterface::class, DietRepository::class );
     }
 
     /**

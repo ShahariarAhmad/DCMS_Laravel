@@ -101,154 +101,42 @@ class EndInterface extends Controller
         return view('layouts.backend.dashboard.admin_dashboard', compact('page_title', 'page'));
     }
 
-    public function diet_records()
-    {
-        if (Gate::allows('isAdmin')) {
+    // public function diet_records()
+    // {
+    //     if (Gate::allows('isAdmin')) {
 
-            $dietRecords = DB::table('transactions')
-                ->join('users', 'transactions.user_id', 'users.id')
-                ->join('diet_records', 'transactions.id', 'diet_records.transaction_id')
-                ->join('diets', 'diets.id', 'diet_records.diet_id')
-                ->orderBy('id','desc')
-                ->select(
-                    'diets.id',
-                    'users.f_name',
-                    'users.l_name',
-                    'transactions.trix_id',
-                    'transactions.amount',
-                    'transactions.sent_to',
-                    'transactions.sent_from',
-                    'transactions.payment_method',
-                    'diets.type',
-                    'transactions.created_at',
-                    'diet_records.date_of_submission'
-                )->get();
-
-
-            $page_title = 'Diet Records';
-            $page       = 'diet_records';
-            return view('layouts.backend.record.diet_record', compact('page_title', 'page', 'dietRecords'));
-        } else {
-            abort(403);
-        }
-    }
+    //         $dietRecords = DB::table('transactions')
+    //             ->join('users', 'transactions.user_id', 'users.id')
+    //             ->join('diet_records', 'transactions.id', 'diet_records.transaction_id')
+    //             ->join('diets', 'diets.id', 'diet_records.diet_id')
+    //             ->orderBy('id','desc')
+    //             ->select(
+    //                 'diets.id',
+    //                 'users.f_name',
+    //                 'users.l_name',
+    //                 'transactions.trix_id',
+    //                 'transactions.amount',
+    //                 'transactions.sent_to',
+    //                 'transactions.sent_from',
+    //                 'transactions.payment_method',
+    //                 'diets.type',
+    //                 'transactions.created_at',
+    //                 'diet_records.date_of_submission'
+    //             )->get();
 
 
-
-
-    public function pre_made_diet_records()
-    {
-        if (Gate::allows('isAdmin')) {
-
-           $dietRecords = DB::table('transactions')
-                ->join('users', 'transactions.user_id', 'users.id')
-                ->join('attached_pre_made_diet_charts', 'transactions.id', 'attached_pre_made_diet_charts.transaction_id')
-                ->join('pre_made_diet_charts', 'attached_pre_made_diet_charts.id', 'pre_made_diet_charts.id')
-                ->select('*')
-                ->get();
-
-
-            $searchRecords = NULL;
-
-            $page_title = 'Pre Made Diet Records';
-            $page       = 'pre_made_diet_records';
-
-
-            return view('layouts.backend.record.premade_diet_record', compact('page_title', 'page', 'searchRecords', 'dietRecords'));
-        } else {
-            abort(403);
-        }
-    }
-
-
-
-    public function pre_detach($id)
-    {
-
-        $diet_records = Attached_pre_made_diet_chart::find($id);
-
-        // $user_id = $diet_records->user_id;
-        $transaction_id = $diet_records->transaction_id;
-
-        Diet_request::create([
-            'transaction_id' => $transaction_id,
-            'person_name' => 'N\A',
-            'age' => 'N\A',
-            'gender' => 'N\A',
-            'height' => 'N\A',
-            'weight' => 'N\A',
-            'q_one' => 'N\A',
-            'q_two' => 'N\A',
-            'q_three' => 'N\A',
-            'q_four' => 'N\A',
-            'q_five' => 'N\A',
-            'q_six' => 'N\A',
-            'send' => 'n'
-        ]);
-        $diet_records->delete();
-        return back()->with('dettached', 'Diet Dettached.');
-    }
+    //         $page_title = 'Diet Records';
+    //         $page       = 'diet_records';
+    //         return view('layouts.backend.record.diet_record', compact('page_title', 'page', 'dietRecords'));
+    //     } else {
+    //         abort(403);
+    //     }
+    // }
 
 
 
 
-    public function diet_requests()
-    {
-        if (Gate::allows('isAdmin')) {
-
-            $dietRequests = DB::table('transactions')
-                ->join('users', 'transactions.user_id', 'users.id')
-                ->join('diet_requests', 'transactions.id', 'diet_requests.transaction_id')
-                ->SELECT('person_name', 'diet_requests.age', 'diet_requests.gender', 'diet_requests.height', 'diet_requests.weight', 'transactions.trix_id', 'transactions.amount', 'transactions.sent_to', 'transactions.sent_from', 'transactions.payment_status', 'transactions.id as pid', 'users.id as uid')
-                ->get();
-
-            $page_title = 'Diet Requests';
-            $page       = 'diet_requests';
-            return view('layouts.backend.diet.diet_request', compact('page_title', 'page', 'dietRequests'));
-        } else {
-            abort(403);
-        }
-    }
-
-
-    public function diet_drafts()
-    {
-        if (Gate::allows('isAdmin')) {
-
-            $diet = Diet::where('draft', 'yes')->get();
-
-            $page_title = 'Diet Drafts';
-            $page       = 'diet_drafts';
-            return view('layouts.backend.diet.diet_draft', compact('page_title', 'page', 'diet'));
-        } else {
-            abort(403);
-        }
-    }
-
-
-
-
-
-
-
-    public function pre_made_diet_charts()
-    {
-        if (Gate::allows('isAdmin')) {
-            $patients = DB::table('transactions')
-                ->join('users', 'transactions.user_id', 'users.id')
-                ->join('diet_requests', 'transactions.id', 'diet_requests.transaction_id')
-                ->SELECT('f_name', 'age', 'sex', 'height', 'weight', 'trix_id', 'users.id as uid', 'transactions.id as tid')
-                ->get();
-
-            $notes = Notes_from_doctor::all();
-            $prediet = Pre_made_diet_chart::all();
-            $page_title = 'Pre-made Diet Charts';
-            $page       = 'pre_made_diet_charts';
-            return view('layouts.backend.diet.premade_diet_chart', compact('page_title', 'page', 'patients', 'prediet', 'notes'));
-        } else {
-            abort(403);
-        }
-    }
+  
 
 
     public function about()
@@ -523,63 +411,11 @@ return $payment_diet_records;
 
 
 
-    public function create_diet()
-    {
-        if (Gate::allows('isAdmin')) {
-
-            $diet = 'a';
-            $page_title = 'Create Diet';
-            $page       = 'create_diet';
-            return view('layouts.backend.dashboard', compact('page_title', 'page'));
-        } else {
-            abort(403);
-        }
-    }
+ 
 
 
 
-    public function view_chart()
-    {
-        if (Gate::allows('isPatient')) {
 
-             $currentDiet = Diet::where('user_id', Auth::id())
-             ->orderby('id','DESC')
-                ->limit(1)
-                ->select(
-                    'id',
-                    'date',
-                    'diet_chart',
-                    'type',
-                    'note',
-                    'join',
-                    'q_one',
-                    'q_two',
-                    'q_three',
-                    'q_four',
-                    'created_at'
-                )
-                ->get()->toArray();
-
-
-            $page_title = 'Current Diet Chart';
-            $page       = 'current_diet_chart';
-            return view('layouts.backend.diet.view_diet', compact('page_title', 'page', 'currentDiet'));
-        } else {
-            abort(403);
-        }
-    }
-
-
-    public function request_diet()
-    {
-        if (Gate::allows('isPatient')) {
-            $page_title = 'Request Diet';
-            $page       = 'request_diet';
-            return view('layouts.backend.diet.request_diet', compact('page_title', 'page'));
-        } else {
-            abort(403);
-        }
-    }
 
 
     public function patitient_dashboard()
@@ -668,40 +504,7 @@ function changePass(edit_profile $request){
         }
     }
 
-    public function all_payment_and_transaction_records(Request $request)
-    {
-        if (Gate::allows('isAdmin')) {
-
-            $payment_appointments = DB::table('users')
-                ->join('transactions', 'transactions.id', 'users.id')
-                ->join('appointments', 'transactions.id', 'appointments.transaction_id')
-                ->join('handlers', 'handlers.id', 'transactions.handler_id')
-                ->join('users as u', 'u.id', 'handlers.user_id')
-                ->orderByDesc('trix_date')
-                ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'trix_date', 'sent_from', 'sent_to', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
-
-
-            $payment_diet_records = DB::table('users')
-
-                ->join('diet_records', 'diet_records.user_id', 'users.id')
-                ->join('transactions', 'transactions.id', 'diet_records.transaction_id')
-                ->join('handlers', 'handlers.id', 'transactions.handler_id')
-                ->join('users as u', 'u.id', 'handlers.user_id')
-                ->orderByDesc('trix_date')
-                ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'trix_date', 'sent_from', 'sent_to', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
-
-
-            $records = array_merge($payment_appointments, $payment_diet_records);
-
-            $page_title = 'All Records';
-            $page       = 'all_records';
-            $data    =   NULL;
-            return view('layouts.backend.record.all_record', compact('page_title', 'page', 'records', 'data'));
-        } else {
-            abort(403);
-        }
-    }
-
+ 
 
 
     public function mcq()
@@ -774,58 +577,9 @@ function changePass(edit_profile $request){
 
 
 
-    function quickform()
-    {
-        if (Gate::allows('isAdmin')) {
+  
 
-
-            if (url()->previous() != request()->root() . '/dashboard/diet_requests') {
-                session()->forget(['create_diet_user_id', 'create_diet_id', 'create_diet_trix']);
-            }
-            $page_title = 'Create Diet';
-            $page       = 'quickform';
-            return view('layouts.backend.diet.row', compact('page_title', 'page'));
-        } else {
-            abort(403);
-        }
-    }
-
-
-
-    function quickformWithRequest(Request $request)
-    {
-        if (Gate::allows('isAdmin')) {
-            if (empty($request->rows)) {
-                return redirect()->route('Dashboard_quickform');
-            }
-
-            $req    =   NULL;
-       
-
-            $req = Diet_request::where('transaction_id', session()->get('create_diet_trix'))->get();
-
-      
-
-            $row = $request->rows;
-            for ($i = 1; $i <= $row; $i++) {
-                $rows[] = $i;
-            }
-
-
-
-            $page_title = 'Create Diet';
-            $page       = 'create_diet';
-
-
-
-            if ($request->rows != NULL) {
-                return view('layouts.backend.diet.create_diet', compact('page_title', 'page', 'rows','req'));
-            }
-        } else {
-            abort(403);
-        }
-    }
-
+   
 
     public function payment()
     {
@@ -859,19 +613,7 @@ function changePass(edit_profile $request){
     }
 
 
-    public function write_a_blog()
-    {
-        if (Gate::any(['isAdmin', 'isWriter'])) {
-            $categories = Category::all();
-            // $tags = Tag::all();
-            $page_title = 'Write A Blog';
-            $page       = 'write_a_blog';
-            return view('layouts.backend.blog.write', compact('page_title', 'page', 'categories'));
-        } else {
-            abort(403);
-        }
-    }
-
+  
 
     public function appointment()
     {

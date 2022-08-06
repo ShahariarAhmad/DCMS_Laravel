@@ -22,6 +22,20 @@ use Illuminate\Support\Facades\File;
 class blogController extends Controller
 {
 
+    public function write_a_blog()
+    {
+        if (Gate::any(['isAdmin', 'isWriter'])) {
+            $categories = Category::all();
+            // $tags = Tag::all();
+            $page_title = 'Write A Blog';
+            $page       = 'write_a_blog';
+            return view('layouts.backend.blog.write', compact('page_title', 'page', 'categories'));
+        } else {
+            abort(403);
+        }
+    }
+
+    
     function deleteInboxMsg($id)
     {
         Services_section_inbox::find($id)->delete();

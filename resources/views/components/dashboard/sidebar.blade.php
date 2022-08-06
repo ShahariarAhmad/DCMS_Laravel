@@ -9,21 +9,14 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item menu-open">
-                    <!-- <ul class="nav nav-treeview mb-5">
-
-                        <a href="{{ route('Dashboard_admin_dashboard') }}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p class="h3">{{ auth()->user()->f_name }}</p>
-                        </a>
-
-                    </ul> -->
+                
                 <li class="nav-item menu-open">
                     <ul class="nav nav-treeview">
 
                         @can('isAdmin')
                             <li class="nav-item">
-                                <a href="{{ route('Dashboard_admin_dashboard') }}"
-                                    class="nav-link {{ Route::is('Dashboard_admin_dashboard') ? 'bg-warning' : '' }}">
+                                <a href="{{ route('Dashboard') }}"
+                                    class="nav-link {{ Route::is('Dashboard') ? 'bg-warning' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p> Dashboard -A</p>
                                 </a>
@@ -286,13 +279,7 @@
                                             <p> About </p>
                                         </a>
                                     </li>
-                                    {{-- <li class="nav-item">
-                                    <a href="{{ route('Dashboard_feedback') }}"
-                        class="nav-link {{ Route::is('Dashboard_admin_dashboard') ? 'bg-success' : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Feedback</p>
-                        </a>
-                </li> --}}
+                  
                                     <li class="nav-item">
                                         <a href="{{ route('Dashboard_chamber_details') }}"
                                             class="nav-link {{ Route::is('Dashboard_chamber_details') ? 'bg-success' : '' }}">

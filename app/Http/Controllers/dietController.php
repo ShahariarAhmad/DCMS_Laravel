@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\request_diet;
+use App\interfaces\DietInterface;
+use App\Models\Attached_pre_made_diet_chart;
 use App\Models\Diet;
 use App\Models\Diet_record;
 use App\Models\Diet_request;
+use App\Models\Notes_from_doctor;
 use App\Models\Pre_made_diet_chart;
 use App\Models\Transaction;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,33 +19,227 @@ use Illuminate\Support\Facades\Gate;
 
 class dietController extends Controller
 {
+    protected  $interface;
 
-    public function detachDiet($id){
+    function __construct(DietInterface $data)
+    {
+        $this->interface = $data;
+    }
+
+
+    public function all_payment_and_transaction_records(Request $request)
+    {
+        if (Gate::allows('isAdmin')) {
+
+            $payment_appointments = DB::table('users')
+                ->join('transactions', 'transactions.id', 'users.id')
+                ->join('appointments', 'transactions.id', 'appointments.transaction_id')
+                ->join('handlers', 'handlers.id', 'transactions.handler_id')
+                ->join('users as u', 'u.id', 'handlers.user_id')
+                ->orderByDesc('trix_date')
+                ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'trix_date', 'sent_from', 'sent_to', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
+
+
+            $payment_diet_records = DB::table('users')
+
+                ->join('diet_records', 'diet_records.user_id', 'users.id')
+                ->join('transactions', 'transactions.id', 'diet_records.transaction_id')
+                ->join('handlers', 'handlers.id', 'transactions.handler_id')
+                ->join('users as u', 'u.id', 'handlers.user_id')
+                ->orderByDesc('trix_date')
+                ->get(['users.f_name as name', 'u.f_name as handler', 'trix_id', 'trix_date', 'sent_from', 'sent_to', 'amount', 'payment_method', 'payment_status', 'cause'])->toArray();
+
+
+            $records = array_merge($payment_appointments, $payment_diet_records);
+
+            $page_title = 'All Records';
+            $page       = 'all_records';
+            $data       =  NULL;
+            return view('layouts.backend.record.all_record', compact('page_title', 'page', 'records', 'data'));
+        } else {
+            abort(403);
+        }
+    }
+
+    function pre_made_diet_records_search(Request $request)
+    {
+
+        $this->interface->premadeSearch($request);
+    }
+
+
+
+    function all_diet_records_search(Request $request)
+    {
+        $query = $request->data;
+
+
+
+        if (!empty($query)) {
+
+            $searchRecords = DB::table('transactions')
+                ->join('users', 'transactions.user_id', 'users.id')
+                ->join('diet_records', 'transactions.id', 'diet_records.transaction_id')
+                ->join('diets', 'diets.id', 'diet_records.diet_id')
+
+
+                ->where('diets.id', 'like', '%' . $query . '%')
+
+                ->orWhere('users.f_name', 'like', '%' . $query . '%')
+
+                ->orWhere('users.l_name', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.trix_id', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.amount', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.sent_to', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.sent_from', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.payment_method', 'like', '%' . $query . '%')
+
+                ->orWhere('diets.type', 'like', '%' . $query . '%')
+
+                ->orWhere('transactions.created_at', 'like', '%' . $query . '%')
+                ->select('diets.id', 'users.f_name', 'users.l_name', 'transactions.trix_id', 'transactions.amount', 'transactions.sent_to', 'transactions.sent_from', 'transactions.payment_method', 'diets.type', 'transactions.created_at', 'diet_records.created_at as diet_date')
+
+
+                ->paginate(50);
+            $dietRecords = NULL;
+            $page_title = 'Diet Records';
+            $page       = 'diet_records';
+            return view('master_layouts.dashboard', compact('page_title', 'page', 'dietRecords', 'searchRecords'));
+        }
+    }
+
+
+
+    function quickformWithRequest(Request $request)
+    {
+        if (Gate::allows('isAdmin')) {
+            if (empty($request->rows)) {
+                return redirect()->route('Dashboard_quickform');
+            }
+
+            $req    =   NULL;
+
+
+            $req = Diet_request::where('transaction_id', session()->get('create_diet_trix'))->get();
+
+
+
+            $row = $request->rows;
+            for ($i = 1; $i <= $row; $i++) {
+                $rows[] = $i;
+            }
+
+
+
+            $page_title = 'Create Diet';
+            $page       = 'create_diet';
+
+
+
+            if ($request->rows != NULL) {
+                return view('layouts.backend.diet.create_diet', compact('page_title', 'page', 'rows', 'req'));
+            }
+        } else {
+            abort(403);
+        }
+    }
+
+    function quickform()
+    {
+        if (Gate::allows('isAdmin')) {
+
+
+            if (url()->previous() != request()->root() . '/dashboard/diet_requests') {
+                session()->forget(['create_diet_user_id', 'create_diet_id', 'create_diet_trix']);
+            }
+            $page_title = 'Create Diet';
+            $page       = 'quickform';
+            return view('layouts.backend.diet.row', compact('page_title', 'page'));
+        } else {
+            abort(403);
+        }
+    }
+
+
+
+    public function request_diet()
+    {
+        if (Gate::allows('isPatient')) {
+            $page_title = 'Request Diet';
+            $page       = 'request_diet';
+            return view('layouts.backend.diet.request_diet', compact('page_title', 'page'));
+        } else {
+            abort(403);
+        }
+    }
+
+
+    public function view_chart()
+    {
+        if (Gate::allows('isPatient')) {
+
+            $currentDiet = Diet::where('user_id', Auth::id())
+                ->orderby('id', 'DESC')
+                ->limit(1)
+                ->select(
+                    'id',
+                    'date',
+                    'diet_chart',
+                    'type',
+                    'note',
+                    'join',
+                    'q_one',
+                    'q_two',
+                    'q_three',
+                    'q_four',
+                    'created_at'
+                )
+                ->get()->toArray();
+
+
+            $page_title = 'Current Diet Chart';
+            $page       = 'current_diet_chart';
+            return view('layouts.backend.diet.view_diet', compact('page_title', 'page', 'currentDiet'));
+        } else {
+            abort(403);
+        }
+    }
+
+
+    public function detachDiet($id)
+    {
         $diet_records = Diet_record::find($id);
-        $user_id = $diet_records->user_id;
-        $transaction_id = $diet_records->transaction_id; 
+        $diet_records->user_id;
+        $transaction_id = $diet_records->transaction_id;
 
-        $diet_request = Diet_request::create( [ 'transaction_id'=> $transaction_id,
-        'person_name'=> 'N\A',
-        'age'=> 'N\A',
-        'gender'=> 'N\A',
-        'height'=> 'N\A',
-        'weight'=> 'N\A',
-        'q_one'=> 'N\A',
-        'q_two'=> 'N\A',
-        'q_three'=> 'N\A',
-        'q_four'=> 'N\A',
-        'q_five'=> 'N\A',
-        'q_six'=> 'N\A',
-        'send'=> 'n']);
+        Diet_request::create([
+            'transaction_id' => $transaction_id,
+            'person_name' => 'N\A',
+            'age' => 'N\A',
+            'gender' => 'N\A',
+            'height' => 'N\A',
+            'weight' => 'N\A',
+            'q_one' => 'N\A',
+            'q_two' => 'N\A',
+            'q_three' => 'N\A',
+            'q_four' => 'N\A',
+            'q_five' => 'N\A',
+            'q_six' => 'N\A',
+            'send' => 'n'
+        ]);
         $diet_records->delete();
         return back()->with('dettached', 'Diet Dettached');
     }
 
 
- 
- 
-  
+
+
+
 
     public function preview_diet($id)
     {
@@ -63,60 +259,7 @@ class dietController extends Controller
 
         if (Gate::allows('isPatient')) {
 
-
-            $person_name = $request->person_name;
-            $age = $request->age;
-            $gender = $request->gender;
-            $height = $request->height;
-            $weight = $request->weight;
-
-            $user_id = Auth::id();
-            $amount = $request->amount;
-            $to =  $request->to;
-            $from = $request->from;
-            $method = $request->method;
-            $user_id = $user_id;
-            $trix = $request->trix;
-            $question_i = $request->question_i;
-            $question_ii = $request->question_ii;
-            $question_iii = $request->question_iii;
-            $question_iv = $request->question_iv;
-            $question_v = $request->question_v;
-            $question_vi = $request->question_vi;
-
-
-
-            DB::transaction(function () use ($person_name, $age, $gender, $height, $weight, $amount, $to, $from, $method, $user_id, $trix, $question_i, $question_ii, $question_iii,  $question_iv, $question_v, $question_vi) {
-                Transaction::create([
-                    'amount' => $amount,
-                    'sent_to' =>  $to,
-                    'sent_from' => $from,
-                    'payment_method' =>  $method,
-                    'user_id' => $user_id,
-                    'trix_id' => $trix,
-                ]);
-
-                $tid = DB::getPdo()->lastInsertId();
-
-                Diet_request::create([
-
-                    'person_name' => $person_name,
-                    'age' => $age,
-                    'gender' => $gender,
-                    'height' => $height,
-                    'weight' => $weight,
-                    'transaction_id'  =>       $tid,
-                    'q_one'           =>       $question_i,
-                    'q_two'           =>       $question_ii,
-                    'q_three'         =>       $question_iii,
-                    'q_four'          =>       $question_iv,
-                    'q_five'        =>        $question_v,
-                    'q_six'          =>        $question_vi,
-                ]);
-            });
-
-
-            // $request->session()->flash('request_diet', 'Your request is successfully registered');
+            $this->interface->request_form($request);
 
             return back()->with('request_diet', 'Your request is successfully registered');
         } else {
@@ -129,7 +272,7 @@ class dietController extends Controller
 
 
 
-    function create_chart(Request $request ,$id,$trix)
+    function create_chart(Request $request, $id, $trix)
     {
 
         if (Gate::allows('isAdmin')) {
@@ -151,9 +294,9 @@ class dietController extends Controller
 
     function payment_confirmed($tid)
     {
-// dd();
+        // dd();
         if (Gate::allows('isAdmin')) {
-      
+
             $data = Transaction::find($tid);
             $data->payment_status = 'approved';
             $data->save();
@@ -163,12 +306,24 @@ class dietController extends Controller
         }
     }
 
+    public function create_diet()
+    {
+        if (Gate::allows('isAdmin')) {
+
+            $diet = 'a';
+            $page_title = 'Create Diet';
+            $page       = 'create_diet';
+            return view('layouts.backend.dashboard', compact('page_title', 'page'));
+        } else {
+            abort(403);
+        }
+    }
 
     function trix_notFound($tid)
     {
 
         if (Gate::allows('isAdmin')) {
-          
+
             $data = Transaction::find($tid);
             $data->payment_status = 'approved';
             $data->save();
@@ -178,30 +333,6 @@ class dietController extends Controller
             abort(403);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     function editDiet($id)
@@ -213,7 +344,7 @@ class dietController extends Controller
                 ->select('diet_chart', 'note', 'id')
                 ->get()->toArray();
 
-      
+
             $id   = $chart[0]['id'];
             $note = $chart[0]['note'];
             $diet = json_decode($chart[0]['diet_chart'], true);
@@ -222,7 +353,7 @@ class dietController extends Controller
             $page       = 'edit_diet';
 
 
-            return view('layouts.backend.diet.edit_diet', compact('page_title', 'page', 'diet', 'note','id'));
+            return view('layouts.backend.diet.edit_diet', compact('page_title', 'page', 'diet', 'note', 'id'));
         } else {
             abort(403);
         }
@@ -233,64 +364,14 @@ class dietController extends Controller
 
 
 
-  
+
 
 
     function updateDiet(Request $req)
     {
         if (Gate::allows('isAdmin')) {
 
-
-            $list = $req->all();
- 
-            $note = $req->note;
-
-            unset($list['_token']);
-            unset($list['id']);
-
-      
-            $count = sizeof($list['time']);
-
-
-
-
-            if ($req->submit == "draftDiet") {
-                $isDraft = 'yes';
-                session()->flash('update_chart_post', 'Is saved as Draft');
-            }
-
-
-
-
-            if ($req->submit == "sendDiet") {
-                $isDraft = 'no';
-                session()->flash('update_chart_post', 'Diet sent successfully');
-            }
-
-
-
-            for ($i = 0; $i < $count; $i++) {
-
-                $diet[$i] = [
-                    'time' =>  $list['time'][$i],
-                    'name' => $list['foodname'][$i],
-                    'amount' => $list['foodamount'][$i],
-                    'date' => $list['date'][$i]
-
-                ];
-            }
-            $x = json_encode($diet);
-
-
-
-
-            if ($req->submit == "draftDiet" || $req->submit == "sendDiet") {
-
-                DB::table('diets')
-                ->where('id', $req->id)
-                ->update(['diet_chart' => $x, 'draft' => $isDraft, 'note' => $note]);
-
-            }
+            $this->interface->update($req);
 
 
 
@@ -323,109 +404,7 @@ class dietController extends Controller
 
 
         if (Gate::allows('isAdmin')) {
-
-            $list = $req->all();
-            $name = $req->name;
-            $age = $req->age;
-            $sex = $req->sex;
-            $type = $req->type;
-            $note = $req->note;
-
-            unset($list['_token']);
-            $count = sizeof($list['time']);
-
-
-
-
-            if ($req->submit == "draftDiet") {
-                $isDraft = 'yes';
-                session()->flash('create_chart_post', 'Is saved as Draft');
-            }
-
-
-
-
-            if ($req->submit == "sendDiet") {
-                $isDraft = 'no';
-                session()->flash('create_chart_post', 'Diet sent successfully');
-            }
-
-
-
-            for ($i = 0; $i < $count; $i++) {
-
-                $diet[$i] = [
-                    'time' =>  $list['time'][$i],
-                    'name' => $list['foodname'][$i],
-                    'amount' => $list['foodamount'][$i],
-                    'date' => $list['date'][$i]
-
-                ];
-            }
-            $x = json_encode($diet);
-
-
-
-
-            if ($req->submit == "draftDiet" || $req->submit == "sendDiet") {
-
-
-
-
-                $r =  DB::select("SELECT * FROM diet_requests WHERE transaction_id = ?", [session()->get('create_diet_trix')]);
-
-                if ($r) {
-                    foreach ($r as $v) {
-                        $person_name = $v->person_name;
-                        $age = $v->age;
-                        $gender = $v->gender;
-                        $height = $v->height;
-                        $weight = $v->weight;
-
-                        $q_one = $v->q_one;
-                        $q_two = $v->q_two;
-                        $q_three = $v->q_three;
-                        $q_four = $v->q_four;
-                        $q_five = $v->q_five;
-                        $q_six = $v->q_six;
-                        $user_id = session()->get('create_diet_id');
-                        $transaction_id = $v->transaction_id;
-                    }
-                }
-
-
-
-                DB::transaction(function () use ($name, $type, $person_name, $age, $gender, $height, $weight, $x, $note, $q_one, $q_two, $q_three, $q_four, $q_five, $q_six, $user_id, $transaction_id, $isDraft) {
-
-                    DB::insert(
-                        "INSERT INTO diets ( name, type, diet_chart,draft, note, q_one, q_two, q_three, q_four, q_five, q_six, user_id, transaction_id , person_name,age,gender,height,weight) 
-                                VALUES 
-                                ( :name, :type, :diet_chart, :draft, :note, :q_one, :q_two, :q_three, :q_four, :q_five, :q_six, :user_id, :transaction_id, :person_name,:age,:gender,:height,:weight)",
-                        ['name' => $name, 'type' => $type, 'diet_chart' => $x, 'draft' => $isDraft, 'note' => $note, 'q_one' => $q_one, 'q_two' => $q_two, 'q_three' => $q_three, 'q_four' => $q_four, 'q_five' => $q_five, 'q_six' => $q_six, 'user_id' => $user_id, 'transaction_id' => $transaction_id, 'person_name' => $person_name, 'age' => $age, 'gender' => $gender, 'height' => $height, 'weight' => $weight]
-                    );
-
-                    $dietId = DB::getPdo()->lastInsertId();
-
-                    DB::insert(
-                        "INSERT INTO diet_records (user_id, transaction_id, date_of_submission, diet_id)
-                                VALUES 
-                                (:user_id, :transaction_id,:date_of_submission, :diet_id)",
-                        ['user_id' => $user_id, 'transaction_id' => $transaction_id, 'date_of_submission' => now(), 'diet_id' => $dietId]
-                    );
-
-
-                    DB::delete("DELETE FROM diet_requests WHERE transaction_id = :transaction_id", ['transaction_id' => $transaction_id]);
-                });
-                session()->forget('create_diet_id');
-                session()->forget('create_diet_trix');
-            }
-
-
-
-    
-
-
-            return redirect()->route('Dashboard_diet_requests');
+            $this->interface->store($req);
         } else {
             abort(403);
         }
@@ -437,109 +416,130 @@ class dietController extends Controller
     {
 
         if (Gate::allows('isAdmin')) {
-           
 
-            $sendto = explode(',', $req->sendto);
-            $prediet_id = $req->prediet_id;
-            $uid = $sendto[0];
-            $trix = $sendto[1];
+            $this->interface->sendPremade($req);
+        } else {
+            abort(403);
+        }
+    }
 
+    public function diet_records()
+    {
+        if (Gate::allows('isAdmin')) {
 
-
-
-            $r =  DB::select("SELECT * FROM diet_requests WHERE transaction_id = :transaction_id", ['transaction_id' => $trix]);
-
-            if ($r) {
-                foreach ($r as $v) {
-                    $person_name = $v->person_name;
-                    $age = $v->age;
-                    $gender = $v->gender;
-                    $height = $v->height;
-                    $weight = $v->weight;
-
-                    $q_one = $v->q_one;
-                    $q_two = $v->q_two;
-                    $q_three = $v->q_three;
-                    $q_four = $v->q_four;
-                    $q_five = $v->q_five;
-                    $q_six = $v->q_six;
-                }
-            }
+            $dietRecords = $this->interface->records();
 
 
 
-            DB::transaction(function () use ($person_name, $age, $gender, $height, $weight, $q_one, $q_two, $q_three, $q_four, $q_five, $q_six, $prediet_id, $uid, $trix) {
+            $page_title = 'Diet Records';
+            $page       = 'diet_records';
+            return view('layouts.backend.record.diet_record', compact('page_title', 'page', 'dietRecords'));
+        } else {
+            abort(403);
+        }
+    }
+    public function pre_made_diet_records()
+    {
+        if (Gate::allows('isAdmin')) {
 
-                DB::insert(
-                    "INSERT INTO attached_pre_made_diet_charts  (  
-                        date_of_submission,  
-                        user_id, 
-                        created_at,  
-                        updated_at, 
-                        q_one,  
-                        q_two, 
-                        q_three, 
-                        q_four, 
-                        q_five, 
-                        q_six,
-                        transaction_id,
-                        pre_made_diet_chart_id,
-                        person_name,
-                        age,
-                        gender,
-                        height,
-                        weight
-                    ) 
-                     VALUES (
-                        :date_of_submission, 
-                        :user_id, 
-                        :created_at, 
-                        :updated_at, 
-                        :q_one, 
-                        :q_two, 
-                        :q_three,
-                        :q_four, 
-                        :q_five, 
-                        :q_six,
-                        :transaction_id,
-                        :pre_made_diet_chart_id,
-                        :person_name,
-                        :age,
-                        :gender,
-                        :height,
-                        :weight
-                        )",
+            $dietRecords = $this->interface->premadeRecords();
+            $searchRecords = NULL;
+
+            $page_title = 'Pre Made Diet Records';
+            $page       = 'pre_made_diet_records';
+
+
+            return view('layouts.backend.record.premade_diet_record', compact('page_title', 'page', 'searchRecords', 'dietRecords'));
+        } else {
+            abort(403);
+        }
+    }
 
 
 
-                    [
-                        "pre_made_diet_chart_id" => $prediet_id,
-                        "user_id" => $uid,
-                        "created_at" => now(),
-                        "updated_at" => now(),
-                        'date_of_submission' => now(),
-                        'q_one' => $q_one,
-                        'q_two' => $q_two,
-                        'q_three' => $q_three,
-                        'q_four' => $q_four,
-                        'q_five' => $q_five,
-                        'q_six' => $q_six,
-                        'transaction_id' => $trix,
-                        'person_name' => $person_name,
-                        'age' => $age,
-                        'gender' => $gender,
-                        'height' => $height,
-                        'weight' => $weight
-                    ]
-                );
+    public function pre_detach($id)
+    {
+
+        $diet_records = Attached_pre_made_diet_chart::find($id);
+
+        // $user_id = $diet_records->user_id;
+        $transaction_id = $diet_records->transaction_id;
+
+        Diet_request::create([
+            'transaction_id' => $transaction_id,
+            'person_name' => 'N\A',
+            'age' => 'N\A',
+            'gender' => 'N\A',
+            'height' => 'N\A',
+            'weight' => 'N\A',
+            'q_one' => 'N\A',
+            'q_two' => 'N\A',
+            'q_three' => 'N\A',
+            'q_four' => 'N\A',
+            'q_five' => 'N\A',
+            'q_six' => 'N\A',
+            'send' => 'n'
+        ]);
+        $diet_records->delete();
+        return back()->with('dettached', 'Diet Dettached.');
+    }
 
 
 
-                DB::delete("DELETE FROM diet_requests WHERE transaction_id = :transaction_id", ['transaction_id' => $trix]);
-            });
+
+    public function diet_requests()
+    {
+        if (Gate::allows('isAdmin')) {
+
+            $dietRequests = DB::table('transactions')
+                ->join('users', 'transactions.user_id', 'users.id')
+                ->join('diet_requests', 'transactions.id', 'diet_requests.transaction_id')
+                ->SELECT('person_name', 'diet_requests.age', 'diet_requests.gender', 'diet_requests.height', 'diet_requests.weight', 'transactions.trix_id', 'transactions.amount', 'transactions.sent_to', 'transactions.sent_from', 'transactions.payment_status', 'transactions.id as pid', 'users.id as uid')
+                ->get();
+
+            $page_title = 'Diet Requests';
+            $page       = 'diet_requests';
+            return view('layouts.backend.diet.diet_request', compact('page_title', 'page', 'dietRequests'));
+        } else {
+            abort(403);
+        }
+    }
 
 
-            return back();
+    public function diet_drafts()
+    {
+        if (Gate::allows('isAdmin')) {
+
+            $diet = Diet::where('draft', 'yes')->get();
+
+            $page_title = 'Diet Drafts';
+            $page       = 'diet_drafts';
+            return view('layouts.backend.diet.diet_draft', compact('page_title', 'page', 'diet'));
+        } else {
+            abort(403);
+        }
+    }
+
+
+
+
+
+
+
+    public function pre_made_diet_charts()
+    {
+        if (Gate::allows('isAdmin')) {
+            $patients = DB::table('transactions')
+                ->join('users', 'transactions.user_id', 'users.id')
+                ->join('diet_requests', 'transactions.id', 'diet_requests.transaction_id')
+                ->SELECT('f_name', 'age', 'sex', 'height', 'weight', 'trix_id', 'users.id as uid', 'transactions.id as tid')
+                ->get();
+
+            $notes = Notes_from_doctor::all();
+            $prediet = Pre_made_diet_chart::all();
+            $page_title = 'Pre-made Diet Charts';
+            $page       = 'pre_made_diet_charts';
+            return view('layouts.backend.diet.premade_diet_chart', compact('page_title', 'page', 'patients', 'prediet', 'notes'));
         } else {
             abort(403);
         }
