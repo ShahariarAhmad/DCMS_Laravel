@@ -23,15 +23,7 @@ class searchController extends Controller
                 ->join('appointments', 'transactions.id', 'appointments.transaction_id')
                 ->join('handlers', 'handlers.id', 'transactions.handler_id')
                 ->join('users as u', 'u.id', 'handlers.user_id')
-
-
-
-
-
-
-
                 ->where('users.f_name', 'like', '%' . $query . '%')
-                // ->orWhere('handler', 'like', '%' . $query . '%')
                 ->orWhere('trix_id', 'like', '%' . $query . '%')
                 ->orWhere('trix_date', 'like', '%' . $query . '%')
                 ->orWhere('sent_from', 'like', '%' . $query . '%')
@@ -40,9 +32,7 @@ class searchController extends Controller
                 ->orWhere('payment_method', 'like', '%' . $query . '%')
                 ->orWhere('payment_status', 'like', '%' . $query . '%')
                 ->orWhere('cause', 'like', '%' . $query . '%')
-
                 ->select('users.f_name as name', 'u.f_name as handler', 'trix_id', 'trix_date', 'sent_from', 'sent_to', 'amount', 'payment_method', 'payment_status', 'cause')
-
                 ->get()->toArray();
 
 

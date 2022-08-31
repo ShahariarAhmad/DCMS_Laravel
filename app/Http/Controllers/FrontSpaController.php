@@ -16,14 +16,10 @@ class FrontSpaController extends Controller
     function index()
     {
          $banner = Banner::where('placement', "=", 'home')->get();
-        //  if (count($banner) == false) {
-        //     return 'empty';
-        //  }else{
-        //      return 'Not Empty';
-        //  }
+    
          
         $chamber = Chamber::all();
-        // dd($chamber);
+     
         $gallery = Gallery::paginate(9);
 
         $blog = Blog::all()->count();

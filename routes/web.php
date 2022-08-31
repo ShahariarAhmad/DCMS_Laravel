@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EndInterface;
+use App\Http\Controllers\EndController;
 use App\Http\Controllers\appointmentController;
 use App\Http\Controllers\dietController;
 use App\Http\Controllers\blogController;
@@ -11,16 +11,6 @@ use App\Http\Controllers\searchController;
 use Illuminate\Support\Facades\Auth;
 
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/dashhub', function () {
 
@@ -58,18 +48,18 @@ Route::middleware(['auth'])->group(function () {
 	Route::prefix('dashboard')->group(function () {
 
 		Route::prefix('serials')->group(function () {
-			Route::get('{trix_id}/withdrawn', [EndInterface::class, 'accountReject'])->name('withdrawn');
-			Route::get('{trix_id}/approve', [EndInterface::class, 'accountApprove'])->name('approve');
-			Route::get('{trix_id}/not-found', [EndInterface::class, 'accountNotFound'])->name('notFound');
-			Route::get('{transaction_id}/present', [EndInterface::class, 'accountPresent'])->name('present');
-			Route::get('{transaction_id}/absent', [EndInterface::class, 'accountAbsent'])->name('absent');
+			Route::get('{trix_id}/withdrawn', [EndController::class, 'accountReject'])->name('withdrawn');
+			Route::get('{trix_id}/approve', [EndController::class, 'accountApprove'])->name('approve');
+			Route::get('{trix_id}/not-found', [EndController::class, 'accountNotFound'])->name('notFound');
+			Route::get('{transaction_id}/present', [EndController::class, 'accountPresent'])->name('present');
+			Route::get('{transaction_id}/absent', [EndController::class, 'accountAbsent'])->name('absent');
 		});
 
 		Route::prefix('gallery')->group(function () {
 
 			Route::delete('{id}/delete', [pageController::class, 'galleryDelete'])
 				->name('Dashboard_galleryDelete');
-			Route::get('/', [EndInterface::class, 'gallery'])
+			Route::get('/', [EndController::class, 'gallery'])
 				->name('Dashboard_gallery');
 			Route::post('upload', [pageController::class, 'galleryUpload'])
 				->name('Dashboard_galleryUpload');
@@ -88,11 +78,11 @@ Route::middleware(['auth'])->group(function () {
 		Route::prefix('chambers')->group(function () {
 			Route::post('/chamber_details/update', [pageController::class, 'chamberDetailsUpdate'])
 				->name('Dashboard_chamberDetailsUpdate');
-			Route::get('/chamber_details', [EndInterface::class, 'chamber_details'])
+			Route::get('/chamber_details', [EndController::class, 'chamber_details'])
 				->name('Dashboard_chamber_details');
 		});
 		Route::prefix('social_links')->group(function () {
-			Route::get('/social_links', [EndInterface::class, 'social_links'])
+			Route::get('/social_links', [EndController::class, 'social_links'])
 				->name('Dashboard_social_links');
 		});
 		Route::prefix('events')->group(function () {
@@ -215,17 +205,17 @@ Route::middleware(['auth'])->group(function () {
 
 
 		Route::prefix('dashboard')->group(function () {
-			Route::get('admin', [EndInterface::class, 'admin_dashboard'])
+			Route::get('admin', [EndController::class, 'admin_dashboard'])
 				->name('Dashboard');
 
-			Route::get('/writer', [EndInterface::class, 'writer_dashboard'])
+			Route::get('/writer', [EndController::class, 'writer_dashboard'])
 				->name('Dashboard_writer_dashboard');
 
 
-			Route::get('moderator', [EndInterface::class, 'moderator_dashboard'])
+			Route::get('moderator', [EndController::class, 'moderator_dashboard'])
 				->name('Dashboard_moderator_dashboard');
 
-			Route::get('/patient', [EndInterface::class, 'patitient_dashboard'])
+			Route::get('/patient', [EndController::class, 'patitient_dashboard'])
 				->name('Dashboard_patitient_dashboard');
 		});
 
@@ -243,50 +233,50 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-		Route::get('/about', [EndInterface::class, 'about'])
+		Route::get('/about', [EndController::class, 'about'])
 			->name('Dashboard_about');
-		Route::get('/accounts', [EndInterface::class, 'accounts'])
+		Route::get('/accounts', [EndController::class, 'accounts'])
 			->name('Dashboard_accounts');
 
 
 
 
-		Route::get('/create_appointment', [EndInterface::class, 'appointment'])
+		Route::get('/create_appointment', [EndController::class, 'appointment'])
 			->name('Dashboard_appointment');
 
 
 
-		Route::get('/contact', [EndInterface::class, 'contact'])
+		Route::get('/contact', [EndController::class, 'contact'])
 			->name('Dashboard_contact');
 
-		Route::get('/developer', [EndInterface::class, 'developer'])
+		Route::get('/developer', [EndController::class, 'developer'])
 			->name('Dashboard_developer');
 
-		Route::get('/feedback', [EndInterface::class, 'feedback'])
+		Route::get('/feedback', [EndController::class, 'feedback'])
 			->name('Dashboard_feedback');
-		Route::post('/patitient_profile/update', [EndInterface::class, 'changePass'])
+		Route::post('/patitient_profile/update', [EndController::class, 'changePass'])
 			->name('Dashboard_changePass');
 
 
 
-		Route::get('patitient_profile', [EndInterface::class, 'patitient_profile'])->name('Dashboard_patitient_profile');
-		Route::get('payments', [EndInterface::class, 'payment'])
+		Route::get('patitient_profile', [EndController::class, 'patitient_profile'])->name('Dashboard_patitient_profile');
+		Route::get('payments', [EndController::class, 'payment'])
 			->name('Dashboard_payments');
-		Route::get('payment_history', [EndInterface::class, 'payment_history'])
+		Route::get('payment_history', [EndController::class, 'payment_history'])
 			->name('Dashboard_payment_history');
-		Route::get('appointment', [EndInterface::class, 'appointments_serials'])
+		Route::get('appointment', [EndController::class, 'appointments_serials'])
 			->name('Dashboard_appointments_serials');
 
 
 
 
 
-		Route::get('create_serials', [EndInterface::class, 'createSerials'])
+		Route::get('create_serials', [EndController::class, 'createSerials'])
 			->name('Dashboard_createSerials');
 
-		Route::delete('accounts/delete={id}', [EndInterface::class, 'deleteAccount'])
+		Route::delete('accounts/delete={id}', [EndController::class, 'deleteAccount'])
 			->name('Dashboard_deleteAccount');
-		Route::post('accounts/add', [EndInterface::class, 'addAccount'])
+		Route::post('accounts/add', [EndController::class, 'addAccount'])
 			->name('Dashboard_addAccount');
 
 
@@ -297,9 +287,9 @@ Route::middleware(['auth'])->group(function () {
 
 		Route::get('accounts/search', [searchController::class, 'user_records_search'])
 			->name('Dashboard_user_records_search');
-		Route::post('/history', [EndInterface::class, 'submit_mcq'])
+		Route::post('/history', [EndController::class, 'submit_mcq'])
 			->name('Dashboard_submit_mcq');
-		Route::get('/history', [EndInterface::class, 'mcq'])
+		Route::get('/history', [EndController::class, 'mcq'])
 			->name('Dashboard_mcq');
 
 
@@ -337,7 +327,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-	Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	Route::get('/home', [HomeController::class, 'index'])->name('home');
 	Route::get('/logout', function () {
 		Auth::logout();
 		return redirect('/');
