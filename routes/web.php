@@ -204,8 +204,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-		Route::prefix('dashboard')->group(function () {
-			Route::get('admin', [EndController::class, 'admin_dashboard'])
+		Route::prefix('/')->group(function () {
+			Route::get('/admin', [EndController::class, 'admin_dashboard'])
 				->name('Dashboard');
 
 			Route::get('/writer', [EndController::class, 'writer_dashboard'])
@@ -271,8 +271,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-		Route::get('create_serials', [EndController::class, 'createSerials'])
-			->name('Dashboard_createSerials');
+		// Route::get('create_serials', [EndController::class, 'createSerials'])
+		// 	->name('Dashboard_createSerials');
 
 		Route::delete('accounts/delete={id}', [EndController::class, 'deleteAccount'])
 			->name('Dashboard_deleteAccount');
@@ -327,7 +327,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-	Route::get('/home', [HomeController::class, 'index'])->name('home');
+	// Route::get('/home', [HomeController::class, 'index'])->name('home');
 	Route::get('/logout', function () {
 		Auth::logout();
 		return redirect('/');

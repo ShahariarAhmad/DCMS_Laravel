@@ -43,7 +43,7 @@ class EndController extends Controller
 
     function __construct(EndInterface $data)
     {
-        $this->interface = $data;
+        return $this->interface = $data;
     }
 
     function createSerials()
@@ -103,7 +103,7 @@ class EndController extends Controller
 
     public function dashboard()
     {
-// return asset('css/adminlte.min.css');
+        // return asset('css/adminlte.min.css');
         $page_title = 'Dashboard';
         $page       = 'dashboard';
         return view('layouts.backend.dashboard.admin_dashboard', compact('page_title', 'page'));
@@ -144,12 +144,12 @@ class EndController extends Controller
 
 
 
-  
+
 
 
     public function about()
     {
-        
+
         if (Gate::allows('isAdmin')) {
             $about = About::all();
             $bannerAboutO = Banner::where('placement', '=', 'about_o')->get();
@@ -199,30 +199,13 @@ class EndController extends Controller
 
     public function addAccount(add_account $request)
     {
-        $this->interface->addAccount($request);
-
+        return $this->interface->addAccount($request);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function admin_dashboard()
     {
-        $this->interface->admin_dashboard();
+        return $this->interface->admin_dashboard();
     }
 
 
@@ -274,7 +257,6 @@ class EndController extends Controller
             $page_title = 'Gallery';
             $page       = 'gallery';
             return view('layouts.backend.pages.gallery', compact('page_title', 'page', 'gallery'));
-
         } else {
             abort(403);
         }
@@ -282,7 +264,7 @@ class EndController extends Controller
 
     public function moderator_dashboard()
     {
-        $this->interface->moderator_dashboard();
+        return $this->interface->moderator_dashboard();
 
         if (Gate::allows('isModerator')) {
             $inbox = Services_section_inbox::where('status', 'unread')->get();
@@ -313,7 +295,7 @@ class EndController extends Controller
 
     public function payment_history()
     {
- $this->interface->payment_history();
+        return $this->interface->payment_history();
     }
 
 
@@ -331,7 +313,7 @@ class EndController extends Controller
 
 
 
- 
+
 
 
 
@@ -351,7 +333,7 @@ class EndController extends Controller
 
     public function patitient_profile()
     {
-        $this->interface->patitient_profile();
+        return $this->interface->patitient_profile();
     }
 
 
@@ -364,15 +346,14 @@ class EndController extends Controller
 
 
 
-function changePass(edit_profile $request){
-    
-            User::whereId(Auth::id())
-            ->update(['password' => Hash::make($request->password)]);
-          
-            return back()->with('changedPassword','Password Changed.');
-    
+    function changePass(edit_profile $request)
+    {
 
-}
+        User::whereId(Auth::id())
+            ->update(['password' => Hash::make($request->password)]);
+
+        return back()->with('changedPassword', 'Password Changed.');
+    }
 
 
 
@@ -404,7 +385,7 @@ function changePass(edit_profile $request){
         }
     }
 
- 
+
 
 
     public function mcq()
@@ -431,8 +412,8 @@ function changePass(edit_profile $request){
     public function submit_mcq(Request $request)
     {
 
-        $this->interface->submit_mcq($request);
-        }
+        return $this->interface->submit_mcq($request);
+    }
 
 
 
@@ -448,9 +429,9 @@ function changePass(edit_profile $request){
 
 
 
-  
 
-   
+
+
 
     public function payment()
     {
@@ -484,7 +465,7 @@ function changePass(edit_profile $request){
     }
 
 
-  
+
 
     public function appointment()
     {

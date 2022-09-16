@@ -26,7 +26,7 @@ class blogController extends Controller
 
     function __construct(BlogInterface $data)
     {
-        $this->interface = $data;
+        return $this->interface = $data;
     }
 
     public function write_a_blog()
@@ -51,26 +51,26 @@ class blogController extends Controller
 
     function allBlogPost()
     {
-        $this->interface->all();
+        return $this->interface->all();
   
     }
 
     function upload(write_article $request)
     {
 
-        $this->interface->upload($request);
+        return $this->interface->upload($request);
        
     }
 
     function deleteBlogPost($id)
     {
-        $this->interface->upload($id);
+        return $this->interface->upload($id);
       
     }
 
     function editBlogPost($blogId)
     {
-        $this->interface->edit($blogId);
+        return $this->interface->edit($blogId);
     }
 
 
@@ -78,7 +78,7 @@ class blogController extends Controller
     function updateBlogPost(edit_article $request)
     {
 
-        $this->interface->update($request);
+        return $this->interface->update($request);
     }
 
 

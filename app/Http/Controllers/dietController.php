@@ -23,7 +23,7 @@ class dietController extends Controller
 
     function __construct(DietInterface $data)
     {
-        $this->interface = $data;
+        return $this->interface = $data;
     }
 
 
@@ -64,7 +64,7 @@ class dietController extends Controller
     function pre_made_diet_records_search(Request $request)
     {
 
-        $this->interface->premadeSearch($request);
+        return $this->interface->premadeSearch($request);
     }
 
 
@@ -259,7 +259,7 @@ class dietController extends Controller
 
         if (Gate::allows('isPatient')) {
 
-            $this->interface->request_form($request);
+            return $this->interface->request_form($request);
 
             return back()->with('request_diet', 'Your request is successfully registered');
         } else {
@@ -313,7 +313,7 @@ class dietController extends Controller
             $diet = 'a';
             $page_title = 'Create Diet';
             $page       = 'create_diet';
-            return view('layouts.backend.dashboard', compact('page_title', 'page'));
+            return view('layouts.backend.diet.create_diet', compact('page_title', 'page'));
         } else {
             abort(403);
         }
@@ -325,7 +325,7 @@ class dietController extends Controller
         if (Gate::allows('isAdmin')) {
 
             $data = Transaction::find($tid);
-            $data->payment_status = 'approved';
+            $data->payment_status = 'notFound';
             $data->save();
 
             return back();
@@ -371,7 +371,7 @@ class dietController extends Controller
     {
         if (Gate::allows('isAdmin')) {
 
-            $this->interface->update($req);
+            return $this->interface->update($req);
 
 
 
@@ -404,7 +404,7 @@ class dietController extends Controller
 
 
         if (Gate::allows('isAdmin')) {
-            $this->interface->store($req);
+            return $this->interface->store($req);
         } else {
             abort(403);
         }
@@ -417,7 +417,7 @@ class dietController extends Controller
 
         if (Gate::allows('isAdmin')) {
 
-            $this->interface->sendPremade($req);
+            return $this->interface->sendPremade($req);
         } else {
             abort(403);
         }

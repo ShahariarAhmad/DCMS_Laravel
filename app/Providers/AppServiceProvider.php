@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\EndController;
+use App\interfaces\BlogInterface;
 use App\interfaces\DietInterface;
+use App\interfaces\EndInterface;
+use App\interfaces\PageInterface;
 use App\Models\Chamber;
 use App\Models\Social_media;
 use Illuminate\Pagination\Paginator;
@@ -14,7 +18,10 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Blog;
 use App\Models\User;
+use App\Repositories\BlogRepository;
 use App\Repositories\DietRepository;
+use App\Repositories\EndRepository;
+use App\Repositories\PageRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +32,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind( BlogInterface::class, BlogRepository::class );
         $this->app->bind( DietInterface::class, DietRepository::class );
+        $this->app->bind( EndInterface::class, EndRepository::class );
+        $this->app->bind( PageInterface::class, PageRepository::class );
+
     }
 
     /**
