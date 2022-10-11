@@ -65,10 +65,7 @@
 
 **Pattern used**
 
-- A repository pattern was used in a few places . Later I removed it  for some reason. 
-- **Implementation of repository pattern still exists in the Original Repository of DCMS, which is a private repository.** 
-
-
+- Repository pattern is used. 
 
 **Known Bugs**
 
@@ -81,32 +78,6 @@
 
 - I am not going to fix these minor bugs at all. It's just a dummy project.
 - Spending time fixing bugs in this dummy project is a waste of time.
-
-
-
-**I made few mistakes in this project...**
-
-* Used Route path instead of route name in blade template.
-* Didn't use route group for organizing my routes in a professional manner.
-* Didn't used resource route in places where it was suitable. 
-
-
-
-**Reason behind these silly mistakes**...
-
-* This Project was originally created about a year ago. I was an absolute beginner back then. What else do you expect ?
-* I am an experienced person now. 
-* But as I said before, I don't want to refactor this project. Because I don't have time to spend on refactoring a dummy project. 
-
-
-
-
-
- **Note**
-
-- The current GitHub repository is recently created. It holds a modified copy of the original DCMS.
-- Original Repository is a private repository. 
-
 
 
  
