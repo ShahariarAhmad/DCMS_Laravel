@@ -11,7 +11,7 @@
     <div class="container-fluid">
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-md-6 pl-3">
                 <div class="card card-info">
                     <div class="card-header">
                         <h3 class="card-title">Image Upload Form</h3>
@@ -65,15 +65,12 @@
         </div>
         <!-- /.card -->
     </div>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-4">
-            <div class="card-header ">
-                <div class="card-tittle " style="text-align: center;">All photos
-
-                </div>
-            </div>
-        </div>
+    @if (session()->has('danger'))
+    <div class="alert alert-danger" role="alert" class="col">
+        {{ session()->get('danger') }}
     </div>
+    @endif
+   <h3 class="pl-3"> All photos</h3>
     <div class="row">
         @foreach ($gallery as $g)
             <div class="col-sm-3">

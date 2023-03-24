@@ -62,6 +62,7 @@ class pageController extends Controller
     function updateEvent(edit_event $request)
     {
         $this->interface->updateEvent($request);
+        return back()->with('success', 'Updated Successfully.');
     }
 
     function deleteEvent($id)
@@ -88,7 +89,7 @@ class pageController extends Controller
             }
 
           
-            return back();
+            return back()->with('danger', 'Photo Deleted.');
         } else {
             abort(403);
         }
@@ -135,6 +136,7 @@ class pageController extends Controller
     function aboutUpdate(aboutPage $request)
     {
         $this->interface->aboutUpdate($request); 
+        return back()->with('success', 'Updated Successfully');
     }
 
 
@@ -168,6 +170,8 @@ class pageController extends Controller
     function chamberDetailsUpdate(chamber_details $request)
     {
         $this->interface->chamberDetailsUpdate($request); 
+
+        return back()->with('success', 'Updated Successfully.');
     }
 
 

@@ -121,13 +121,13 @@
                             </a>
                             <ul class="nav nav-treeview" style="display: none;">
                                 @can('isAdmin')
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a href="{{ route('Dashboard_all_payment_and_transaction_records') }}"
                                             class="nav-link {{ Route::is('Dashboard_all_payment_and_transaction_records') ? 'bg-success' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p> All Records</p>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                     <li class="nav-item">
                                         <a href="{{ route('Dashboard_diet_records') }}"
                                             class="nav-link {{ Route::is('Dashboard_diet_records') ? 'bg-success' : '' }}">

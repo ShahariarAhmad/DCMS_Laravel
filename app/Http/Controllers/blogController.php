@@ -64,7 +64,17 @@ class blogController extends Controller
 
     function deleteBlogPost($id)
     {
-        return $this->interface->upload($id);
+
+        $b=Blog::find($id);
+      
+
+        if (file_exists($b->img_url)) {
+            unlink($b->img_url);
+          
+        }
+        $b->delete();
+        return back()->with('danger','Article Deleted...!');
+        // return $this->interface->upload($id);
       
     }
 

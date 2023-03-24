@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Diet_record extends Model
 {
     use HasFactory;
-
+    protected $guarded = ['id'];
     public function diets()
     {
         return $this->belongsTo(Diet::class);

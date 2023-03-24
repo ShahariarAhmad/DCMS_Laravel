@@ -9,7 +9,7 @@ class Diet extends Model
 {
     public $timestamps = false;
     use HasFactory;
-
+    protected $guarded = ['id'];
     public function Diet_records()
     {
         return $this->hasMany(Diet_record::class);

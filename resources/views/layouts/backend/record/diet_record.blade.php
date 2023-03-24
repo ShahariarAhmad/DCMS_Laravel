@@ -61,7 +61,7 @@
                                                     {{ $loop->iteration }}
                                                 </td>
                                                 <td class="pt-3">
-                                                    {{ $x->date_of_submission }}
+                                                    {{ date('d M, Y',strtotime( $x->date_of_submission))  }}
 
                                                 </td>
                                                 <td class="pt-3">

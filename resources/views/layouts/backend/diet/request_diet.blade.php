@@ -16,6 +16,13 @@
                                 {{ session()->get('request_diet') }}
                             </div>
                         @endif
+                        @if (session()->has('warning'))
+                        <div class="alert alert-warning" role="alert">
+                            {{ session()->get('warning') }}
+                        </div>
+                    @endif
+
+                        
                         <!-- form start -->
                         <form action="{{route('Dashboard_request_diet_form')}}" method="post">
                             @csrf
@@ -61,6 +68,8 @@
                                     <label for="question" class="col-sm-3 col-form-label">Transaction id</label>
                                     <input name="trix" type="text"   class="form-control col-sm-9 @error('trix')is-invalid @enderror">
                                 </div>
+
+
                                 <div class="form-group row">
                                     <label for="question" class="col-sm-2 col-form-label">amount</label>
                                     <input type="text" class="form-control col-sm-10 @error('amount')is-invalid @enderror"  name="amount" type="text">

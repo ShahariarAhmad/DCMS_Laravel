@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
 
 		Route::prefix('gallery')->group(function () {
 
-			Route::delete('{id}/delete', [pageController::class, 'galleryDelete'])
+			Route::get('{id}/delete', [pageController::class, 'galleryDelete'])
 				->name('Dashboard_galleryDelete');
 			Route::get('/', [EndController::class, 'gallery'])
 				->name('Dashboard_gallery');
@@ -102,7 +102,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::prefix('diet')->group(function () {
 			Route::post('/request_diet/sent/', [dietController::class, 'request_diet_form'])
 				->name('Dashboard_request_diet_form');
-			Route::get("/dashboard/diet_requests/{id}/{trix}/create", [dietController::class, 'create_chart'])
+			Route::get("/diet_requests/{id}/{trix}/create", [dietController::class, 'create_chart'])
 				->name('Dashboard_create_chart');
 			Route::get('/diet_requests/{id}/confirmed', [dietController::class, 'payment_confirmed'])
 				->name('Dashboard_payment_confirmed');
@@ -166,9 +166,11 @@ Route::middleware(['auth'])->group(function () {
 				->name('Dashboard_allBlogPost');
 			Route::get('write', [blogController::class, 'write_a_blog'])
 				->name('Dashboard_write_a_blog');
-			Route::post('write', [blogController::class, 'uploadBlogPost'])
+			// Route::post('write', [blogController::class, 'uploadBlogPost'])
+			// 	->name('Dashboard_uploadBlogPost');
+				Route::post('write', [blogController::class, 'upload'])
 				->name('Dashboard_uploadBlogPost');
-			Route::delete('{id}/delete', [blogController::class, 'deleteBlogPost'])
+			Route::get('{id}/delete', [blogController::class, 'deleteBlogPost'])
 				->name('Dashboard_deleteBlogPost');
 			Route::get('{edit}/edit', [blogController::class, 'editBlogPost'])
 				->name('Dashboard_editBlogPost');

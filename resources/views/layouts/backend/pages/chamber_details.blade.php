@@ -2,6 +2,11 @@
 @section('content')
     <div class="content">
         <div class="container-fluid ">
+            @if (session()->has('success'))
+            <div class="alert alert-success" role="alert" class="col">
+                {{ session()->get('success') }}
+            </div>
+            @endif
             <div class="row ">
 
                 @foreach ($chamber as $c)

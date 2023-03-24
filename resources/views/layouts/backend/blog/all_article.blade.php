@@ -1,25 +1,32 @@
 @extends('layouts.backend.layout')
 @section('content')
-    <div class="content">
-        <div class="container-fluid">
-            @if (session()->has('status'))
-                <div class="alert alert-success" role="alert" class="col">
-                    {{ session()->get('status') }}
-                </div>
-            @endif
-            <div class="row">
-                <div class="col-12 ">
-                    <div class="card">
+<div class="content">
+    <div class="container-fluid">
+        @if (session()->has('status'))
+        <div class="alert alert-success" role="alert" class="col">
+            {{ session()->get('status') }}
+        </div>
+        @endif
+
+        @if (session()->has('danger'))
+        <div class="alert alert-danger" role="alert" class="col">
+            {{ session()->get('danger') }}
+        </div>
+        @endif
 
 
-                        <div class="card-header bg-primary">
-                            <div class="card-tittle">All blogs</div>
-                        </div>
-                        @foreach ($blog as $article)
-                            <div class="card-body">
-                                <a type="button" class="btn btn-light float-right text-danger"
-                                    href=" {{route('Dashboard_deleteBlogPost',$article->id)}}"> Delete</a>
-                                <!-- @if (Auth::user()->role_id == 1)
+        <div class="row">
+            <div class="col-12 ">
+                <div class="card">
+
+
+                    <div class="card-header bg-primary">
+                        <div class="card-tittle">All blogs</div>
+                    </div>
+                    @foreach ($blog as $article)
+                    <div class="card-body">
+                        <a type="button" class="btn btn-light float-right text-danger" href=" {{route('Dashboard_deleteBlogPost',$article->id)}}"> Delete</a>
+                        <!-- @if (Auth::user()->role_id == 1)
     @if ($article->feautured == 'y')
     <a type="button" class="btn btn-light float-right text-dark"
                                                     href="/dashboard/blog/detach={{ $article->id }}"> Detach</a>
@@ -29,20 +36,18 @@
     @endif
     @endif -->
 
-                                <a type="button" class="btn btn-light float-right text-info"
-                                    href="{{route('Dashboard_editBlogPost',$article->id)}}"> Edit</a>
-                                <br>
-                                <p class="card-title"> <b> {{ $article->title }} </b></p>
-                                <p class="card-text">{{ Str::limit(strip_tags($article->article), 250) }}</p>
-                                <p class="card-text"><small
-                                        class="text-muted">{{ $article->created_at->diffForHumans() }}</small></p>
+                        <a type="button" class="btn btn-light float-right text-info" href="{{route('Dashboard_editBlogPost',$article->id)}}"> Edit</a>
+                        <br>
+                        <p class="card-title"> <b> {{ $article->title }} </b></p>
+                        <p class="card-text">{{ Str::limit(strip_tags($article->article), 250) }}</p>
+                        <p class="card-text"><small class="text-muted">{{ $article->created_at->diffForHumans() }}</small></p>
 
-                            </div>
-                        @endforeach
-                        <!-- /.card -->
                     </div>
+                    @endforeach
+                    <!-- /.card -->
                 </div>
-                <!--
+            </div>
+            <!--
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
@@ -67,7 +72,7 @@
                                 </div>
                             </div>
                         </div> -->
-            </div>
         </div>
     </div>
+</div>
 @endsection

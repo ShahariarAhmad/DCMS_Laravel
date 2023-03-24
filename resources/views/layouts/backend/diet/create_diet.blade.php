@@ -15,7 +15,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Time</th>
+                                            <th>Time {{session()->get('create_diet_trix')}}</th>
                                             <th>Name</th>
                                             <th>Amount</th>
                                             <th>Days</th>
@@ -60,11 +60,12 @@
 
                                         </tr>
                                         <tr>
+                                        
+                                            {{-- <td colspan="2">
+                                                <input type="submit" class="col-12" value="draftDiet" name="submit">
+                                            </td> --}}
                                             <td colspan="2">
                                                 <input type="submit" class="col-12" value="sendDiet" name="submit">
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="submit" class="col-12" value="draftDiet" name="submit">
                                             </td>
                                         </tr>
                                     </tbody>

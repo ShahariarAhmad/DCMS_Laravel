@@ -164,7 +164,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Acoount type</label>
                                         <select class="form-control select2 select2-hidden-accessible" style="width: 100%;"
-                                            data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                            data-select2-id="1" tabindex="-1" aria-hidden="true" name="designation">
                                           
 
                                             <option value="moderator">moderator</option>

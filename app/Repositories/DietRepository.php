@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 
 use App\Interfaces\DietInterface;
+use App\Models\Diet;
+use App\Models\Diet_record;
 use App\Models\Diet_request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
@@ -14,108 +16,95 @@ class DietRepository implements DietInterface
 
     public function store($req)
     {
-        $list = $req->all();
-        $name = $req->name;
-        $age = $req->age;
-        $sex = $req->sex;
-        $type = $req->type;
-        $note = $req->note;
+//         $list = $req->all();
+//         $name = $req->name;
+//         $age = $req->age;
+//         $sex = $req->sex;
+//         $type = $req->type;
+//         $note = $req->note;
 
-        unset($list['_token']);
-        $count = sizeof($list['time']);
-
-
-
-
-        if ($req->submit == "draftDiet") {
-            $isDraft = 'yes';
-            session()->flash('create_chart_post', 'Is saved as Draft');
-        }
+//         unset($list['_token']);
+//         $count = sizeof($list['time']);
 
 
 
 
-        if ($req->submit == "sendDiet") {
-            $isDraft = 'no';
-            session()->flash('create_chart_post', 'Diet sent successfully');
-        }
-
-
-
-        for ($i = 0; $i < $count; $i++) {
-
-            $diet[$i] = [
-                'time' =>  $list['time'][$i],
-                'name' => $list['foodname'][$i],
-                'amount' => $list['foodamount'][$i],
-                'date' => $list['date'][$i]
-
-            ];
-        }
-        $x = json_encode($diet);
+//         if ($req->submit == "draftDiet") {
+//             $isDraft = 'yes';
+//             session()->flash('create_chart_post', 'Is saved as Draft');
+//         }
 
 
 
 
-        if ($req->submit == "draftDiet" || $req->submit == "sendDiet") {
+//         if ($req->submit == "sendDiet") {
+//             $isDraft = 'no';
+//             session()->flash('create_chart_post', 'Diet sent successfully');
+//         }
+
+
+
+//         for ($i = 0; $i < $count; $i++) {
+
+//             $diet[$i] = [
+//                 'time' =>  $list['time'][$i],
+//                 'name' => $list['foodname'][$i],
+//                 'amount' => $list['foodamount'][$i],
+//                 'date' => $list['date'][$i]
+
+//             ];
+//         }
+//         $x = json_encode($diet);
 
 
 
 
-            $r =  DB::select("SELECT * FROM diet_requests WHERE transaction_id = ?", [session()->get('create_diet_trix')]);
+//         // if ($req->submit == "draftDiet" || $req->submit == "sendDiet") {
 
-            if ($r) {
-                foreach ($r as $v) {
-                    $person_name = $v->person_name;
-                    $age = $v->age;
-                    $gender = $v->gender;
-                    $height = $v->height;
-                    $weight = $v->weight;
+//             if ($req->submit == "sendDiet") {
 
-                    $q_one = $v->q_one;
-                    $q_two = $v->q_two;
-                    $q_three = $v->q_three;
-                    $q_four = $v->q_four;
-                    $q_five = $v->q_five;
-                    $q_six = $v->q_six;
-                    $user_id = session()->get('create_diet_id');
-                    $transaction_id = $v->transaction_id;
-                }
-            }
+//                 return 'Here : '. session()->get('create_diet_trix');
 
+//             // $r =  DB::select("SELECT * FROM diet_requests WHERE transaction_id = ?", [session()->get('create_diet_trix')]);
+//  $r = Diet_request::where('transaction_id',session()->get('create_diet_trix'))->get();
+//             if ($r) {
+//                 foreach ($r as $v) {
+//                     $person_name = $v->person_name;
+//                     $age = $v->age;
+//                     $gender = $v->gender;
+//                     $height = $v->height;
+//                     $weight = $v->weight;
 
-
-            DB::transaction(function () use ($name, $type, $person_name, $age, $gender, $height, $weight, $x, $note, $q_one, $q_two, $q_three, $q_four, $q_five, $q_six, $user_id, $transaction_id, $isDraft) {
-
-                DB::insert(
-                    "INSERT INTO diets ( name, type, diet_chart,draft, note, q_one, q_two, q_three, q_four, q_five, q_six, user_id, transaction_id , person_name,age,gender,height,weight) 
-                            VALUES 
-                            ( :name, :type, :diet_chart, :draft, :note, :q_one, :q_two, :q_three, :q_four, :q_five, :q_six, :user_id, :transaction_id, :person_name,:age,:gender,:height,:weight)",
-                    ['name' => $name, 'type' => $type, 'diet_chart' => $x, 'draft' => $isDraft, 'note' => $note, 'q_one' => $q_one, 'q_two' => $q_two, 'q_three' => $q_three, 'q_four' => $q_four, 'q_five' => $q_five, 'q_six' => $q_six, 'user_id' => $user_id, 'transaction_id' => $transaction_id, 'person_name' => $person_name, 'age' => $age, 'gender' => $gender, 'height' => $height, 'weight' => $weight]
-                );
-
-                $dietId = DB::getPdo()->lastInsertId();
-
-                DB::insert(
-                    "INSERT INTO diet_records (user_id, transaction_id, date_of_submission, diet_id)
-                            VALUES 
-                            (:user_id, :transaction_id,:date_of_submission, :diet_id)",
-                    ['user_id' => $user_id, 'transaction_id' => $transaction_id, 'date_of_submission' => now(), 'diet_id' => $dietId]
-                );
+//                     $q_one = $v->q_one;
+//                     $q_two = $v->q_two;
+//                     $q_three = $v->q_three;
+//                     $q_four = $v->q_four;
+//                     $q_five = $v->q_five;
+//                     $q_six = $v->q_six;
+//                     $user_id = session()->get('create_diet_id');
+//                     $transaction_id = $v->transaction_id;
+//                 }
+//             }
 
 
-                DB::delete("DELETE FROM diet_requests WHERE transaction_id = :transaction_id", ['transaction_id' => $transaction_id]);
-            });
-            session()->forget('create_diet_id');
-            session()->forget('create_diet_trix');
-        }
+
+//             DB::transaction(function () use ($name, $type, $person_name, $age, $gender, $height, $weight, $x, $note, $q_one, $q_two, $q_three, $q_four, $q_five, $q_six, $user_id, $transaction_id, $isDraft) {
+
+//                 Diet::create(['name' => $name, 'type' => $type, 'diet_chart' => $x, 'draft' => $isDraft, 'note' => $note, 'q_one' => $q_one, 'q_two' => $q_two, 'q_three' => $q_three, 'q_four' => $q_four, 'q_five' => $q_five, 'q_six' => $q_six, 'user_id' => $user_id, 'transaction_id' => $transaction_id, 'person_name' => $person_name, 'age' => $age, 'gender' => $gender, 'height' => $height, 'weight' => $weight]);
+//                 $dietId = DB::getPdo()->lastInsertId();
+//                 Diet_record::create( ['user_id' => $user_id, 'transaction_id' => $transaction_id, 'date_of_submission' => now(), 'diet_id' => $dietId]);
+//                 Diet_request::where('transaction_id',$transaction_id)->delete();
+//             });
+//             session()->forget('create_diet_id');
+//             session()->forget('create_diet_trix');
+//         }
 
 
 
 
 
 
-        return redirect()->route('Dashboard_diet_requests');
+//         return redirect()->route('Dashboard_diet_requests');
     }
 
     public function destroy()

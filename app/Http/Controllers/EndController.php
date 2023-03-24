@@ -196,10 +196,38 @@ class EndController extends Controller
     }
 
 
-
-    public function addAccount(add_account $request)
+    // public function addAccount(add_account $request)
+    public function addAccount(Request $request)
     {
-        return $this->interface->addAccount($request);
+
+        if (Gate::allows('isAdmin')) {
+
+            if ($request->designation == 'moderator') {
+                $designation = 2;
+            }
+
+            if ($request->designation == 'writer') {
+                $designation = 4;
+            }
+
+
+            User::create([
+                'f_name'    =>    $request->fname,
+                'l_name'    =>    $request->lname,
+                'email'    =>    $request->email,
+                'role_id'    =>    $designation,
+                'cell_number'    =>    $request->number,
+                'sex'    =>    $request->gender,
+                'password'        => Hash::make('dcms1234'),
+            ]);
+        } else {
+            abort(403);
+        }
+        return back()->with('addAccount', 'Account created successfully');
+
+
+
+        // return $this->interface->addAccount($request);
     }
 
 

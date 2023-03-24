@@ -3,6 +3,11 @@
     <div class="content">
         <div class="container-fluid ">
             <div class="row ">
+                @if (session()->has('success'))
+                <div class="alert alert-success" role="alert" class="col">
+                    {{ session()->get('success') }}
+                </div>
+                @endif
                 <!-- col-sm-12 col-md-6 col-lg-4 -->
                 <div class="col-md-8">
                     <div class="card col-lg-8 col-md-12 col-sm-12" style="min-width: 100%;">
