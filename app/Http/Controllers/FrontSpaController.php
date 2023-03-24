@@ -25,9 +25,10 @@ class FrontSpaController extends Controller
         $blog = Blog::all()->count();
         $event = Event::all();
         $about = About::all();
-        $social = Social_media::all();
+        // $social = Social_media::all();
+        return view('dcms', compact("banner", "blog", "event", "about", 'chamber', 'gallery'));
 
-        return view('dcms', compact("banner", "blog", "event", "about", 'chamber', 'gallery', 'social'));
+        // return view('dcms', compact("banner", "blog", "event", "about", 'chamber', 'gallery', 'social'));
     }
 
     function blogCount()

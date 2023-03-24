@@ -327,17 +327,17 @@ class EndController extends Controller
     }
 
 
-    public function social_links()
-    {
-        if (Gate::allows('isAdmin')) {
-            $social = Social_media::all();
-            $page_title = 'Social Links';
-            $page       = 'social_links';
-            return view('layouts.backend.pages.social_links', compact('page_title', 'page', 'social'));
-        } else {
-            abort(403);
-        }
-    }
+    // public function social_links()
+    // {
+    //     if (Gate::allows('isAdmin')) {
+    //         $social = Social_media::all();
+    //         $page_title = 'Social Links';
+    //         $page       = 'social_links';
+    //         return view('layouts.backend.pages.social_links', compact('page_title', 'page', 'social'));
+    //     } else {
+    //         abort(403);
+    //     }
+    // }
 
 
 

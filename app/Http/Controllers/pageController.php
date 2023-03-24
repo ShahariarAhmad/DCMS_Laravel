@@ -44,6 +44,7 @@ class pageController extends Controller
     function createEvent(create_event $request)
     {
         $this->interface->createEvent($request);
+        return back()->with('success', 'Created Successfully.');
     }
 
     function editEvent($id)

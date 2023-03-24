@@ -422,7 +422,7 @@
                                                                 class="fa-solid fa-graduation-cap"></i> &nbsp;
                                                             {{ $about[0]->degree }}
                                                         </p>
-                                                        <div>
+                                                        {{-- <div>
                                                             <div class="btn-group">
                                                                 <a href="{{ $social[0]->f_link }}"
                                                                     class="text-white me-2">
@@ -438,7 +438,7 @@
                                                                     <i class="fa-brands fa-linkedin h4"></i>
                                                                 </a>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
 

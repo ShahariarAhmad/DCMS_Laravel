@@ -287,13 +287,13 @@
                                             <p> Chamber Details</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a href="{{ route('Dashboard_social_links') }}"
                                             class="nav-link {{ Route::is('Dashboard_social_links') ? 'bg-success' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p> Social Links</p>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                     <li class="nav-item">
                                         <a href="{{ route('Dashboard_event') }}"
                                             class="nav-link {{ Route::is('Dashboard_event') ? 'bg-success' : '' }}">
